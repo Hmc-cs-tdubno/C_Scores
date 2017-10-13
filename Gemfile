@@ -33,6 +33,7 @@ gem 'jbuilder', '~> 2.5'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -52,3 +53,14 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+
+
+# MySQL DB
+gem 'mysql2'
+
+#Jquery Gems
+gem 'jquery-rails'
+
+# Bootstrap Gems
+gem 'bootstrap', '~> 4.0.0.beta'
+gem 'sprockets-rails', :require => 'sprockets/railtie'
