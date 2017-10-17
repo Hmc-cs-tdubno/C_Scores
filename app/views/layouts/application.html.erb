@@ -2,13 +2,57 @@
 <html>
   <head>
     <title>CScores</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <%= csrf_meta_tags %>
 
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+
   </head>
 
   <body>
-    <%= yield %>
+    <!-- begin navbar -->
+    <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+
+      <!-- Navbar toggler for when page is small -->
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Site title -->
+      <a class="navbar-brand ml-3" href="/">CScores</a>
+
+      <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+        <ul class="navbar-nav mr-auto mt-2 mt-md-0">
+
+          <!-- Predict button: NOT IN MVP SO COMMENTED OUT -->
+         <!--  <li class="nav-item">
+            <a class="nav-link" href="#">Predict</a>
+          </li> -->
+
+          <!-- Drop Down -->
+          <li class="insights nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Insights
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <a id="barbutton" class="dropdown-item">Bar Graph</a>
+              <a id="scatterbutton" class="dropdown-item">Scatter Plot</a>
+              <a id="statbutton" class="dropdown-item">Stats</a>
+            </div>
+          </li>
+
+        </ul>
+      </div>
+    </nav>
+    <!-- end navbar -->
+
+    <!-- Page Content -->
+    <div class="container">
+      <%= yield %>
+    </div>
+
   </body>
 </html>

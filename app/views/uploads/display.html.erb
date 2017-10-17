@@ -1,0 +1,74 @@
+<div class="mt-4 mx-auto">
+
+    <div class="row">
+        <div class="col-sm-8 col-md-7">
+            <h2>Results</h2>
+            <image id="bargraph" class="img-fluid graph" src="https://plot.ly/static/img/tour/tour-bars.svg"></image>
+
+            <image id="scattergraph" class="img-fluid graph" src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Mpl_example_scatter_plot.svg"></image>
+
+            <table id="stats" class="table table-hover">
+                <tr>
+                    <th scope="row"><strong>Least similarly answered question</strong></th>
+                    <td>#2</td>
+                </tr>
+                <tr>
+                    <th scope="row"><strong>Most similarly answered question</strong></th>
+                    <td>#14</td>
+                </tr>
+            </table>
+
+        </div>
+
+        <!-- Legend -->
+        <div class="col-sm-4 col-md-5 sidebar legend"> 
+            <div class="ml-2 container">
+                <h3>Legend</h3>
+                <br>
+                hello
+                <br>
+                hello
+                <br>
+            </div>
+        </div>
+
+    </div>
+    
+    <hr class="hline">
+
+    <div class="row">
+        <a href="/"><button type="submit" class="btn btn-primary mx-auto">Upload </button></a>
+    </div>
+    
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.insights').show();
+        $("#scattergraph").hide();
+        $("#stats").hide();
+
+        $("#barbutton").click(function () {
+            $("#scattergraph").hide();
+            $("#stats").hide();
+            $(".legend").show(800);
+            $(".hline").show(800);
+            $("#bargraph").show(800);
+        });
+
+        $("#scatterbutton").click(function () {
+            $("#bargraph").hide();
+            $("#stats").hide();
+            $(".legend").show(800);
+            $(".hline").show(800);
+            $("#scattergraph").show(800);
+        });
+
+        $("#statbutton").click(function () {
+            $("#bargraph").hide();
+            $("#scattergraph").hide();
+            $(".hline").hide(400);
+            $(".legend").hide(400);
+            $("#stats").show(800);
+        });
+    });
+</script>

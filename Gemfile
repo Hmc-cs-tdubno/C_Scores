@@ -62,5 +62,7 @@ gem 'mysql2'
 gem 'jquery-rails'
 
 # Bootstrap Gems
-gem 'bootstrap', '~> 4.0.0.beta'
+gem 'bootstrap', '= 4.0.0.alpha6'
 gem 'sprockets-rails', :require => 'sprockets/railtie'
+gem 'popper_js'
+
