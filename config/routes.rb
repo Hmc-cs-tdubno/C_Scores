@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+    resources :uploads do
+      collection {post :import}
+    end
   root  'uploads#index'
 
   get 'display' => 'uploads#display'

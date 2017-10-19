@@ -3,7 +3,16 @@
         <div class="form-group">
             <label>Upload data here:</label>
             <input type="file" class="form-control" placeholder="Choosefile" required>
-          </div>
+        </div>
         <button type="submit" class="btn btn-primary mx-auto">Upload</button>
     </form>
+</div>
+<div>
+
+<h4>Import that data!</h4>
+  <%=form_tag import_uploads_path, multipart: true do %>
+  <%= file_field_tag :file%>
+  <%= submit_tag "Import CSV",{:class => 'btn btn-primary'} %>
+
+  <% end %>
 </div>

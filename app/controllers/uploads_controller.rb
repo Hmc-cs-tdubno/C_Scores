@@ -1,5 +1,6 @@
 class UploadsController < ApplicationController
   def index
+    @people = Person.all
   end
 
   def new
@@ -9,5 +10,12 @@ class UploadsController < ApplicationController
   end
 
   def display
+    @people = Person.all
   end
+
+  def import
+    Person.import(params[:file])
+    redirect_to '/display', notice: "uploaded"
+  end
+
 end
