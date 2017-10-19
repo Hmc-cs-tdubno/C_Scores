@@ -21,7 +21,7 @@
         </div>
 
         <!-- Legend -->
-        <div class="col-sm-4 col-md-5 sidebar legend"> 
+        <div class="col-sm-4 col-md-5 sidebar legend">
             <div class="ml-2 container">
                 <h3>Legend</h3>
                 <br>
@@ -33,14 +33,29 @@
         </div>
 
     </div>
-    
+
     <hr class="hline">
 
     <div class="ml-2 row">
         <a href="/"><button type="submit" class="btn btn-primary mx-auto">Upload </button></a>
     </div>
-    
+
 </div>
+
+
+<% @people.each do |key,user| %>
+<div>
+<%= user.challenger%>
+<%= user.collaborator%>
+<%= user.communicator%>
+<%= user.contributor%>
+  <% user.answers.each do |answer| %>
+    <%= answer %>
+  <%end%>
+</div>
+<% end %>
+
+
 <script type="text/javascript">
     $(document).ready(function () {
         $('.insights').show();
