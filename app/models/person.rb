@@ -14,8 +14,6 @@ class Person < ApplicationRecord
 		elsif(file.content_type=="application/json")
 			curfile = file.read
 			hash = JSON.parse(curfile)
-		
-		
 			Person.create! hash
 		else
 			puts "hey stop that"
