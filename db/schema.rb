@@ -17,15 +17,32 @@ ActiveRecord::Schema.define(version: 20171027223216) do
     t.integer "collaborator"
     t.integer "communicator"
     t.integer "contributor"
-    t.text "answers"
     t.text "extra"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "q1"
+    t.string "q2"
+    t.string "q3"
+    t.string "q4"
+    t.string "q5"
+    t.string "q6"
+    t.string "q7"
+    t.string "q8"
+    t.string "q9"
+    t.string "q10"
+    t.string "q11"
+    t.string "q12"
+    t.string "q13"
+    t.string "q14"
+    t.string "q15"
+    t.string "q17"
+    t.string "q18"
   end
 
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+<<<<<<< HEAD
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -38,6 +55,8 @@ ActiveRecord::Schema.define(version: 20171027223216) do
     t.string "last_sign_in_ip"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+=======
+>>>>>>> d8b320935f01bbdc7f14f283ae586de2d1e09d78
   end
 
 end
