@@ -17,7 +17,6 @@ ActiveRecord::Schema.define(version: 20171027225825) do
     t.integer "collaborator"
     t.integer "communicator"
     t.integer "contributor"
-    t.text "answers"
     t.text "extra"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
