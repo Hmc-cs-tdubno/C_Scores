@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171013172425) do
+ActiveRecord::Schema.define(version: 20171027225825) do
 
   create_table "people", force: :cascade do |t|
     t.integer "challenger"
@@ -21,5 +21,28 @@ ActiveRecord::Schema.define(version: 20171013172425) do
     t.text "extra"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "q1"
+    t.string "q2"
+    t.string "q3"
+    t.string "q4"
+    t.string "q5"
+    t.string "q6"
+    t.string "q7"
+    t.string "q8"
+    t.string "q9"
+    t.string "q10"
+    t.string "q11"
+    t.string "q12"
+    t.string "q13"
+    t.string "q14"
+    t.string "q15"
+    t.string "q17"
+    t.string "q18"
   end
+
+  create_table "users", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
 end
