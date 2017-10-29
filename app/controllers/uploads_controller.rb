@@ -16,7 +16,7 @@ class UploadsController < ApplicationController
   end
 
   def import
-    Person.import(params[:file])
+    Person.import(params[:file], current_user)
     redirect_to '/display', notice: "uploaded"
   end
 
