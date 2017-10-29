@@ -7,6 +7,11 @@
         <button type="submit" class="btn btn-primary mx-auto">Upload</button>
     </form>
 </div> -->
+<% if flash[:notice] %>
+  <script type="text/javascript">
+    alert("<%=flash[:notice]%>")
+  </script>
+  <% end %>
 <div>
 
 <h4>Import that data!</h4>

@@ -69,6 +69,12 @@ the answer to a question is stored, it has chars as key and
 
 
 	def self.import(file, current_user_id)
+		message = ""
+		curhash = {}
+		curhash[:user_id] = current_user_id
+
+		# Read file and create a hash to add to db
+		# if invalid filetype return error response
 		if(file.content_type=="text/csv")
 			CSV.foreach(file.path, headers: true) do |row|
 				curhash = row.to_hash
@@ -79,18 +85,30 @@ the answer to a question is stored, it has chars as key and
 					curhash[question] = ANSWERTOCHAR[curhash[question]]
 					i += 1
 				end
+
 				#setting extra equal to empty hash for testing purposes
 				curhash["extra"] = {}
-				curhash["user_id"] = current_user_id
-				Person.create! curhash
+				message	= "CSV uploaded"
 			end
 		elsif(file.content_type=="application/json")
 			curfile = file.read
-			hash = JSON.parse(curfile)
-			Person.create! hash
+			curhash = JSON.parse(curfile)
+			message = "JSON uploaded"
 		else
-			puts "hey stop that"
+			response = {:status => 4, :message => "Incorrect FileType"}
+			return response
 		end
+
+		# Returns whether response saying whether database created new entry or failed to do so
+		begin
+			Person.create! curhash
+			response = {:status => 0, :message => message}
+			return response
+		rescue ActiveModel::UnknownAttributeError => e
+			puts e
+			response = {:status => 2, :message => e.to_s}
+			return response
+		end 
 	end
 
 
