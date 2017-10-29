@@ -6,7 +6,6 @@ class Person < ApplicationRecord
 		if(file.content_type=="text/csv")
 			CSV.foreach(file.path, headers: true) do |row|
 				curhash = row.to_hash
-				# curhash["answers"] = curhash["answers"].tr('[]', '').split(',').map(&:to_i)
 				curhash["extra"] = {}
 				Person.create! curhash
 			end

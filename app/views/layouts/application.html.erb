@@ -32,9 +32,21 @@
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="navbar-nav mr-auto mt-2 mt-md-0">
 
-          <li class="nav-item">
-            <%= link_to "Sign In", new_user_registration_url, {:class => " nav-link"} %>
-          </li>
+          
+
+          <% if user_signed_in? %>
+            <li class="nav-item">
+              <%= link_to('Logout', destroy_user_session_path, {:class => "nav-link", :method => :delete}) %>  
+            </li>
+          <% else %>
+            <li class="nav-item">
+              <%= link_to "Log In", new_user_session_path, {:class => "nav-link"} %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Sign Up", new_user_registration_url, {:class => "nav-link"} %>
+            </li>
+          <% end %>
+          
 
           <!-- Drop Down -->
 
