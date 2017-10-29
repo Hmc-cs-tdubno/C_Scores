@@ -13,6 +13,11 @@
   </head>
 
   <body>
+      <!-- DEVISE FLASH MESSAGES -->
+      <!-- <p class="notice"><%= notice %></p>
+      <p class="alert"><%= alert %></p> -->
+
+
     <!-- begin navbar -->
     <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
 
@@ -27,12 +32,24 @@
       <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="navbar-nav mr-auto mt-2 mt-md-0">
 
-          <!-- Predict button: NOT IN MVP SO COMMENTED OUT -->
-         <!--  <li class="nav-item">
-            <a class="nav-link" href="#">Predict</a>
-          </li> -->
+          
+
+          <% if user_signed_in? %>
+            <li class="nav-item">
+              <%= link_to('Logout', destroy_user_session_path, {:class => "nav-link", :method => :delete}) %>  
+            </li>
+          <% else %>
+            <li class="nav-item">
+              <%= link_to "Log In", new_user_session_path, {:class => "nav-link"} %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "Sign Up", new_user_registration_url, {:class => "nav-link"} %>
+            </li>
+          <% end %>
+          
 
           <!-- Drop Down -->
+
           <li class="insights nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Insights

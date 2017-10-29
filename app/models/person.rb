@@ -6,6 +6,7 @@ class Person < ApplicationRecord
 		if(file.content_type=="text/csv")
 			CSV.foreach(file.path, headers: true) do |row|
 				curhash = row.to_hash
+<<<<<<< HEAD
 				#loop through questions & change them to chars
 				i = 0
 				until i > 18 do
@@ -14,6 +15,8 @@ class Person < ApplicationRecord
 					i += 1
 				end
 				#setting extra equal to empty hash for testing purposes
+=======
+>>>>>>> f591f78406beb98081ab8b64bbf1c0d8dc2be6a6
 				curhash["extra"] = {}
 				Person.create! curhash
 			end
