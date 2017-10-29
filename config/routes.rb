@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
   get 'uploads/create'
   
-  get 'api/:id' =>'graphing#new'
+  get 'api/bar/' =>'graphing#bar'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

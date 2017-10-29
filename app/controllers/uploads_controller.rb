@@ -2,7 +2,7 @@ class UploadsController < ApplicationController
   before_action :authenticate_user!
   
   def index
-    @people = Person.all
+    @people = Person.where("user_id = ?", current_user.id)
   end
 
   def new
@@ -12,12 +12,22 @@ class UploadsController < ApplicationController
   end
 
   def display
-    @people = Person.all
+    @people = Person.where("user_id = ?", current_user.id)
   end
 
   def import
-    Person.import(params[:file])
-    redirect_to '/display', notice: "uploaded"
+    #Try to upload data to DB, catch response
+    response = Person.import(params[:file])
+
+    # Let the user know if there was an error uploading
+    # otherwise redirect to display page
+    if response[:status]==0
+      redirect_to '/display', notice: response[:message]
+    else
+      bla = response[:message].gsub! ' \'', ' ('
+      bla2 = bla.gsub! '\' ', ') '
+      redirect_to '/', notice: bla
+    end
   end
 
 end
