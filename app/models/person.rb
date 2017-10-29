@@ -71,8 +71,7 @@ the answer to a question is stored, it has chars as key and
 	def self.import(file, current_user_id)
 		message = ""
 		curhash = {}
-		curhash[:user_id] = current_user_id
-
+		
 		# Read file and create a hash to add to db
 		# if invalid filetype return error response
 		if(file.content_type=="text/csv")
@@ -101,6 +100,7 @@ the answer to a question is stored, it has chars as key and
 
 		# Returns whether response saying whether database created new entry or failed to do so
 		begin
+			curhash["user_id"] = current_user_id
 			Person.create! curhash
 			response = {:status => 0, :message => message}
 			return response

@@ -17,7 +17,7 @@ class UploadsController < ApplicationController
 
   def import
     #Try to upload data to DB, catch response
-    response = Person.import(params[:file])
+    response = Person.import(params[:file],current_user.id)
 
     # Let the user know if there was an error uploading
     # otherwise redirect to display page

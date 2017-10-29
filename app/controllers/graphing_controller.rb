@@ -11,7 +11,7 @@ class GraphingController < ApplicationController
   def bar
       # Grab the uploaded data for the current user
     @people= Person.where("user_id = ?", current_user.id)
-
+  #TODO make this better
     # Store the frequencies of each style in a hash
     frequencies = {
       :challenger => 0,
@@ -22,9 +22,16 @@ class GraphingController < ApplicationController
 
     # Update frequencies 
     @people.each do |person|
-      frequencies[primary_style(person) += 1
+      frequencies[primary_style(person)] += 1
     end 
-    
-    render json: {status: 'SUCCESS', message: 'Loaded all posts', data: frequencies}, status: :ok
+    data = []
+    frequencies.each do |k,v|
+      data+= [
+        {:style => k,
+        :freq => v}
+      ]
+    end
+      
+    render json: {status: 'SUCCESS', message: 'Loaded all posts', data: data}, status: :ok
   end 
 end
