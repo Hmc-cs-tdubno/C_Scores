@@ -4,8 +4,18 @@ class GraphingController < ApplicationController
   def new
   end
   
-  def get
-    
+  def scatter
+    # Grab the uploaded data for the current user
+    @people= Person.where("user_id = ?", current_user.id)
+    #TODO make this better
+    data = []
+    @people.each do |person|
+      data+=[
+        {:collab => person[:collaborator],
+        :cont => person[:contributor]}
+      ]
+    end
+    render json: {status: 'SUCCESS', message: 'Loaded all posts', data: data}, status: :ok
   end
   
   def bar

@@ -10,7 +10,7 @@
             <h2>Results</h2>
               <svg id ="bargraph" class="graph" width="960" height="500"></svg>
 
-            <image id="scattergraph" class="img-fluid graph" src="https://upload.wikimedia.org/wikipedia/commons/4/4b/Mpl_example_scatter_plot.svg"></image>
+            <svg id="scattergraph" class="graph" width="960" height="500"></svg>
 
             <table id="stats" class="table table-hover">
                 <tr>
@@ -61,82 +61,177 @@
 
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <script>
-var margin = {top: 20, right: 20, bottom: 70, left: 40},
-    width = 600 - margin.left - margin.right,
-    height = 300 - margin.top - margin.bottom;
+  var margin = {top: 20, right: 20, bottom: 70, left: 40},
+      width = 600 - margin.left - margin.right,
+      height = 300 - margin.top - margin.bottom;
 
 
-// set the ranges
-var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+  // set the ranges
+  var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
 
-var y = d3.scale.linear().range([height, 0]);
+  var y = d3.scale.linear().range([height, 0]);
 
-// define the axis
-var xAxis = d3.svg.axis()
-    .scale(x)
-    .orient("bottom")
-
-
-var yAxis = d3.svg.axis()
-    .scale(y)
-    .orient("left")
-    .ticks(10);
+  // define the axis
+  var xAxis = d3.svg.axis()
+      .scale(x)
+      .orient("bottom")
 
 
-// add the SVG element
-var svg = d3.select("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-  .append("g")
-    .attr("transform", 
-          "translate(" + margin.left + "," + margin.top + ")");
-
-var data = d3.json("http://localhost:3000/api/bar",function(data){
-  data.data.forEach(function(d){
-  d.style = d.style;
-  d.freq = +d.freq;  
-
-  })
-  // scale the range of the data
-  x.domain(data.data.map(function(d) { return d.style; }));
-  y.domain([0, d3.max(data.data, function(d) { return d.freq; })]);
-
-  // add axis
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis)
-    .selectAll("text")
-      .style("text-anchor", "end")
-      .attr("dx", "-.8em")
-      .attr("dy", "-.55em")
-      .attr("transform", "rotate(-90)" );
-
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 5)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Frequency");
+  var yAxis = d3.svg.axis()
+      .scale(y)
+      .orient("left")
+      .ticks(10);
 
 
-  // Add bar chart
-  svg.selectAll("bar")
-      .data(data.data)
-    .enter().append("rect")
-      .attr("class", "bar")
-      .attr("x", function(d) { return x(d.style); })
-      .attr("width", x.rangeBand())
-      .attr("y", function(d) { return y(d.freq); })
-      .attr("height", function(d) { return height - y(d.freq); });
+  // add the SVG element
+  var svg = d3.select("#bargraph")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform", 
+            "translate(" + margin.left + "," + margin.top + ")");
 
-});
+  var data = d3.json("http://localhost:3000/api/bar",function(data){
+    data.data.forEach(function(d){
+    d.style = d.style;
+    d.freq = +d.freq;  
+
+    })
+    // scale the range of the data
+    x.domain(data.data.map(function(d) { return d.style; }));
+    y.domain([0, d3.max(data.data, function(d) { return d.freq; })]);
+
+    // add axis
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis)
+      .selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "3em")
+        .attr("dy", ".55em")
+        .attr("transform", "rotate(0)" );
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+      .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 5)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Frequency");
+
+
+    // Add bar chart
+    svg.selectAll("bar")
+        .data(data.data)
+      .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", function(d) { return x(d.style); })
+        .attr("width", x.rangeBand())
+        .attr("y", function(d) { return y(d.freq); })
+        .attr("height", function(d) { return height - y(d.freq); });
+
+  });
 
 </script>
 
+<script>
+  var margin1 = {top: 20, right: 20, bottom: 30, left: 40},
+      width1 = 960 - margin1.left - margin1.right,
+      height1 = 500 - margin1.top - margin1.bottom;
+
+  var x1 = d3.scale.linear()
+      .range([0, width1]);
+
+  var y1 = d3.scale.linear()
+      .range([height1, 0]);
+
+  var color = d3.scale.category10();
+
+  var xAxis1 = d3.svg.axis()
+      .scale(x1)
+      .orient("bottom");
+
+  var yAxis1 = d3.svg.axis()
+      .scale(y1)
+      .orient("left");
+
+  var svg2 = d3.select("#scattergraph")
+      .attr("width", width1 + margin1.left + margin1.right)
+      .attr("height", height1 + margin1.top + margin1.bottom)
+    .append("g")
+      .attr("transform", "translate(" + margin1.left + "," + margin1.top + ")");
+
+  d3.json("http://localhost:3000/api/scatter", function(error, data) {
+    if (error) throw error;
+    data = data.data
+    data.forEach(function(d) {
+      d.collab = +d.collab;
+      d.cont = +d.cont;
+    });
+
+    x1.domain(d3.extent(data, function(d) { return d.cont; })).nice();
+    y1.domain(d3.extent(data, function(d) { return d.collab; })).nice();
+
+    svg2.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height1 + ")")
+        .call(xAxis1)
+      .append("text")
+        .attr("class", "label")
+        .attr("x", width1)
+        .attr("y", -6)
+        .style("text-anchor", "end")
+        .text("contributor");
+
+    svg2.append("g")
+        .attr("class", "y axis")
+        .call(yAxis1)
+      .append("text")
+        .attr("class", "label")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 6)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("collaborator")
+
+    svg2.selectAll(".dot")
+        .data(data)
+      .enter().append("circle")
+        .attr("class", "dot")
+        .attr("r", 20)
+        .attr("cx", function(d) { 
+          console.log("cont "+d.cont)
+          return x(d.cont); })
+        .attr("cy", function(d) { 
+          console.log("collab "+d.collab)
+          return y(d.collab); })
+        .style("fill", "red")
+
+    // var legend = svg.selectAll(".legend")
+    //     .data(color.domain())
+    //   .enter().append("g")
+    //     .attr("class", "legend")
+    //     .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+    // 
+    // legend.append("rect")
+    //     .attr("x", width1 - 18)
+    //     .attr("width", 18)
+    //     .attr("height", 18)
+    //     .style("fill", color);
+    // 
+    // legend.append("text")
+    //     .attr("x", width1 - 24)
+    //     .attr("y", 9)
+    //     .attr("dy", ".35em")
+    //     .style("text-anchor", "end")
+    //     .text(function(d) { return d; });
+
+  });
+
+</script>
 
 <script type="text/javascript">
     $(document).ready(function () {
