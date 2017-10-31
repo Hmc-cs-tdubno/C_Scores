@@ -11,7 +11,7 @@ module GraphingHelper
             :communicator => person[:communicator],
             :contributor => person[:contributor]
         }
-        styles.max_by{|k,v| v}[0]
+        return styles.max_by{|k,v| v}[0]
     end
 
 end
