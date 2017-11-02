@@ -82,12 +82,12 @@ the answer to a question is stored, it has chars as key and
 					curhash = row.to_hash
 					
 					#loop through questions & change them to chars
-					i = 0
-					until i > 18 do
-						question = 'q' + 1.to_s
-						curhash[question] = ANSWERTOCHAR[curhash[question]]
-						i += 1
-					end
+					# i = 0
+					# until i > 18 do
+					# 	question = 'q' + 1.to_s
+					# 	curhash[question] = ANSWERTOCHAR[curhash[question]]
+					# 	i += 1
+					# end
 
 					#setting extra equal to empty hash for testing purposes
 					curhash["extra"] = {}
