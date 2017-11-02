@@ -48,15 +48,14 @@
 </div>
 <style>
 
-.bar rect {
-  fill: steelblue;
-}
+  .bar rect {
+    fill: steelblue;
+  }
 
-.bar text {
-  fill: #fff;
-  font: 10px sans-serif;
-}
-
+  .bar text {
+    fill: #fff;
+    font: 10px sans-serif;
+  }
 </style>
 
 <script src="https://d3js.org/d3.v3.min.js"></script>
@@ -181,8 +180,8 @@
         .call(xAxis1)
       .append("text")
         .attr("class", "label")
-        .attr("x", width1)
-        .attr("y", -6)
+        .attr("x1", width1)
+        .attr("y1", -6)
         .style("text-anchor", "end")
         .text("contributor");
 
@@ -192,7 +191,7 @@
       .append("text")
         .attr("class", "label")
         .attr("transform", "rotate(-90)")
-        .attr("y", 6)
+        .attr("y1", 6)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
         .text("collaborator")
@@ -201,14 +200,14 @@
         .data(data)
       .enter().append("circle")
         .attr("class", "dot")
-        .attr("r", 20)
+        .attr("r", 10)
         .attr("cx", function(d) { 
           console.log("cont "+d.cont)
-          return x(d.cont); })
+          return x1(d.cont); })
         .attr("cy", function(d) { 
           console.log("collab "+d.collab)
-          return y(d.collab); })
-        .style("fill", "red")
+          return y1(d.collab); })
+        .style("fill", "black")
 
     // var legend = svg.selectAll(".legend")
     //     .data(color.domain())
