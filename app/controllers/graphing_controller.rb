@@ -5,14 +5,17 @@ class GraphingController < ApplicationController
   end
   
   def scatter
+    style1 = params[:style1]
+    style2 = params[:style2]
+
     # Grab the uploaded data for the current user
     @people= Person.where("user_id = ?", current_user.id)
     #TODO make this better
     data = []
     @people.each do |person|
       data+=[
-        {:collab => person[:collaborator],
-        :cont => person[:contributor]}
+        {:style1 => person[style1],
+        :style2 => person[style2]}
       ]
     end
     render json: {status: 'SUCCESS', message: 'Loaded all posts', data: data}, status: :ok
@@ -36,12 +39,10 @@ class GraphingController < ApplicationController
     end 
     data = []
     frequencies.each do |k,v|
-      data+= [
-        {:style => k,
-        :freq => v}
-      ]
+      data+= [{:style => k, :freq => v}]
     end
       
     render json: {status: 'SUCCESS', message: 'Loaded all posts', data: data}, status: :ok
   end 
+
 end
