@@ -4,7 +4,12 @@
   </script>
   <% end %>
 <div class="mt-4 mx-auto">
-
+    <%if cookies[:hello]%>
+    <%else %>
+    <%=cookies[:hello]=0%>
+    <%end%>
+    
+    
     <div class="row">
         <div id="graphdiv" class="col-sm-10 col-md-7">
             <h2>Results</h2>
@@ -19,7 +24,7 @@
                 </tr>
                 <tr>
                     <th scope="row"><strong>Most similarly answered question</strong></th>
-                    <td>#14</td>
+                    <td><%=@most_com[0][1..-1]%></td>
                 </tr>
             </table>
 
@@ -255,6 +260,7 @@
 <script type="text/javascript">
     $(document).ready(function () {
 
+
         // Show relevant buttons and hide irrelevant graphs when page first loads
         $('.insights').show();
         $("#stats").hide();
@@ -267,29 +273,33 @@
 
 
         // These functions hide graphs when we select a different graph to view
+      var curcookie = '<%=cookies[:hello]%>'
+      $('.insights').show();
+      if (curcookie==0){
+        showstart();
+      }
+      else if(curcookie==1) {
+        showbarbutton();
+      }
+      else if(curcookie==2) {
+        showscatter();
+      }
+      else if(curcookie==3) {
+        statbutton();
+      }
         $("#barbutton").click(function () {
-            $("#scattergraph").hide();
-            $("#stats").hide();
-            $(".legend").show(800);
-            $(".hline").show(800);
-            $("#bargraph").show(800);
+            showbarbutton();
+            document.cookie = "hello = 1";
         });
 
         $("#scatterbutton").click(function () {
-            $("#bargraph").hide();
-            $("#stats").hide();
-            $(".legend").show(800);
-            $(".hline").show(800);
-            $("#scattergraph").show(800);
-            $(".scatterlegend").show(800);
+            showscatter();
+            document.cookie = "hello = 2";
         });
 
         $("#statbutton").click(function () {
-            $("#bargraph").hide();
-            $("#scattergraph").hide();
-            $(".hline").hide(400);
-            $(".legend").hide(400);
-            $("#stats").show(800);
+            statbutton();
+            document.cookie = "hello = 3";
         });
 
 
@@ -298,6 +308,35 @@
           drawScatterGraph($("#style1").val(), $("#style2").val());
         })
     });
+    
+    function showscatter(){
+      $("#bargraph").hide();
+      $("#stats").hide();
+      $(".legend").show(800);
+      $(".hline").show(800);
+      $("#scattergraph").show(800);
+      $(".scatterlegend").show(800);
+    }
+    function showstart(){
+      $('.insights').show();
+      $("#scattergraph").hide();
+      $("#stats").hide();
+    }
+    function showbarbutton(){
+      $("#scattergraph").hide();
+      $("#stats").hide();
+      $(".legend").show(800);
+      $(".hline").show(800);
+      $("#bargraph").show(800);
+    }
+    
+    function statbutton(){
+      $("#bargraph").hide();
+      $("#scattergraph").hide();
+      $(".hline").hide(400);
+      $(".legend").hide(400);
+      $("#stats").show(800);
+    }
 </script>
 
 
