@@ -7,7 +7,7 @@ module GraphingHelper
         # grab the style scores from the person
         styles = {
             :challenger => person[:challenger],
-            :contributor => person[:contributor],
+            :collaborator => person[:collaborator],
             :communicator => person[:communicator],
             :contributor => person[:contributor]
         }

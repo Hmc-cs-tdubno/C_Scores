@@ -1,5 +1,6 @@
 class UploadsController < ApplicationController
   before_action :authenticate_user!
+  include UsersHelper
   
   def index
     @people = Person.where("user_id = ?", current_user.id)
@@ -13,6 +14,9 @@ class UploadsController < ApplicationController
 
   def display
     @people = Person.where("user_id = ?", current_user.id)
+    
+    puts "hi"
+    @most_com = comon_answer(@people)
   end
 
   def import

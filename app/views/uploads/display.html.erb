@@ -4,7 +4,12 @@
   </script>
   <% end %>
 <div class="mt-4 mx-auto">
-
+    <%if cookies[:hello]%>
+    <%else %>
+    <%=cookies[:hello]=0%>
+    <%end%>
+    
+    
     <div class="row">
         <div class="col-sm-10 col-md-7">
             <h2>Results</h2>
@@ -19,7 +24,7 @@
                 </tr>
                 <tr>
                     <th scope="row"><strong>Most similarly answered question</strong></th>
-                    <td>#14</td>
+                    <td><%=@most_com[0][1..-1]%></td>
                 </tr>
             </table>
 
@@ -180,8 +185,8 @@
         .call(xAxis1)
       .append("text")
         .attr("class", "label")
-        .attr("x1", width1)
-        .attr("y1", -6)
+        .attr("x", width1)
+        .attr("y", -6)
         .style("text-anchor", "end")
         .text("contributor");
 
@@ -191,7 +196,7 @@
       .append("text")
         .attr("class", "label")
         .attr("transform", "rotate(-90)")
-        .attr("y1", 6)
+        .attr("y", 6)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
         .text("collaborator")
@@ -234,34 +239,63 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('.insights').show();
-        $("#scattergraph").hide();
-        $("#stats").hide();
-
+      var curcookie = '<%=cookies[:hello]%>'
+      $('.insights').show();
+      if (curcookie==0){
+        showstart();
+      }
+      else if(curcookie==1) {
+        showbarbutton();
+      }
+      else if(curcookie==2) {
+        showscatter();
+      }
+      else if(curcookie==3) {
+        statbutton();
+      }
         $("#barbutton").click(function () {
-            $("#scattergraph").hide();
-            $("#stats").hide();
-            $(".legend").show(800);
-            $(".hline").show(800);
-            $("#bargraph").show(800);
+            showbarbutton();
+            document.cookie = "hello = 1";
         });
 
         $("#scatterbutton").click(function () {
-            $("#bargraph").hide();
-            $("#stats").hide();
-            $(".legend").show(800);
-            $(".hline").show(800);
-            $("#scattergraph").show(800);
+            showscatter();
+            document.cookie = "hello = 2";
         });
 
         $("#statbutton").click(function () {
-            $("#bargraph").hide();
-            $("#scattergraph").hide();
-            $(".hline").hide(400);
-            $(".legend").hide(400);
-            $("#stats").show(800);
+            statbutton();
+            document.cookie = "hello = 3";
         });
     });
+    
+    function showscatter(){
+      $("#bargraph").hide();
+      $("#stats").hide();
+      $(".legend").show(800);
+      $(".hline").show(800);
+      $("#scattergraph").show(800);
+    }
+    function showstart(){
+      $('.insights').show();
+      $("#scattergraph").hide();
+      $("#stats").hide();
+    }
+    function showbarbutton(){
+      $("#scattergraph").hide();
+      $("#stats").hide();
+      $(".legend").show(800);
+      $(".hline").show(800);
+      $("#bargraph").show(800);
+    }
+    
+    function statbutton(){
+      $("#bargraph").hide();
+      $("#scattergraph").hide();
+      $(".hline").hide(400);
+      $(".legend").hide(400);
+      $("#stats").show(800);
+    }
 </script>
 
 
