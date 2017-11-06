@@ -21,7 +21,7 @@ class UploadsController < ApplicationController
     @people = Person.where("user_id = ?", current_user.id)
     
     puts "hi"
-    @most_com = comon_answer(@people)
+    @most_com = common_answer(@people)
   end
 
   def import

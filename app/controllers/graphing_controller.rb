@@ -35,7 +35,7 @@ class GraphingController < ApplicationController
 
     # Update frequencies 
     @people.each do |person|
-      frequencies[primary_style(person)] += 1
+      frequencies[person.style] += 1
     end 
     data = []
     frequencies.each do |k,v|
