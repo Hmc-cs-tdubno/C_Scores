@@ -8,9 +8,9 @@
     </form>
 </div> -->
 <% if flash[:notice] %>
-  <script type="text/javascript">
-    alert("<%=flash[:notice]%>")
-  </script>
+  <div class="alert alert-danger">
+    <strong>Danger!</strong> <%=flash[:notice].html_safe%>.
+  </div>
   <% end %>
 <div>
   
