@@ -5,14 +5,17 @@ class GraphingController < ApplicationController
   end
   
   def scatter
+    style1 = params[:style1]
+    style2 = params[:style2]
+
     # Grab the uploaded data for the current user
     @people= Person.where("user_id = ?", current_user.id)
     #TODO make this better
     data = []
     @people.each do |person|
       data+=[
-        {:collab => person[:collaborator],
-        :cont => person[:contributor]}
+        {:style1 => person[style1],
+        :style2 => person[style2]}
       ]
     end
     render json: {status: 'SUCCESS', message: 'Loaded all posts', data: data}, status: :ok
@@ -21,8 +24,6 @@ class GraphingController < ApplicationController
   def bar
       # Grab the uploaded data for the current user
     @people= Person.where("user_id = ?", current_user.id)
-  #TODO make this better
-    # Store the frequencies of each style in a hash
     frequencies = {
       :challenger => 0,
       :contributor => 0,
@@ -32,16 +33,15 @@ class GraphingController < ApplicationController
 
     # Update frequencies 
     @people.each do |person|
-      frequencies[primary_style(person)] += 1
+      puts "reaches graphing"
+      frequencies[person["style"].parameterize.underscore.to_sym] += 1
     end 
     data = []
     frequencies.each do |k,v|
-      data+= [
-        {:style => k,
-        :freq => v}
-      ]
+      data+= [{:style => k, :freq => v}]
     end
       
     render json: {status: 'SUCCESS', message: 'Loaded all posts', data: data}, status: :ok
   end 
+
 end

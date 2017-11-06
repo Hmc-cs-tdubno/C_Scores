@@ -8,16 +8,16 @@
     </form>
 </div> -->
 <% if flash[:notice] %>
-  <script type="text/javascript">
-    alert("<%=flash[:notice]%>")
-  </script>
+  <div class="alert alert-danger">
+    <strong>Danger!</strong> <%=flash[:notice].html_safe%>.
+  </div>
   <% end %>
 <div>
-
+  
 <h4>Import that data!</h4>
   <%=form_tag import_uploads_path, multipart: true do %>
   <%= file_field_tag :file%>
-  <%= submit_tag "Import CSV",{:class => 'btn btn-primary'} %>
+  <%= submit_tag "Import CSV/JSON",{:class => 'btn btn-primary'} %>
 
   <% end %>
 </div>
