@@ -26,6 +26,10 @@ class UploadsController < ApplicationController
     @most_com_contributor = common_style_answer(@people, "contributor")
     @most_com_collaborator = common_style_answer(@people, "collaborator")
     @most_com_communicator = common_style_answer(@people, "communicator")
+    @substyle_challenger = common_substyle(@people, "challenger")
+    @substyle_contributor = common_substyle(@people, "contributor")
+    @substyle_collaborator = common_substyle(@people, "collaborator")
+    @substyle_communicator = common_substyle(@people, "communicator")
   end
 
   def import

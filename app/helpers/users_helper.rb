@@ -36,4 +36,27 @@ module UsersHelper
       end
       return bla.max_by{|k,v| v}
   end
+
+  def common_substyle(people, style)
+      # returns the most common substyle for a given style -
+      # the style with the second highest score for eveyone of a given style
+      substyles = {}
+      substyles["collaborator"]=0
+      substyles["communicator"]=0
+      substyles["contributor"]=0
+      substyles["challenger"]=0
+      people.each do |person|
+        if person.style = style
+          substyle = "collaborator"
+          styles.each do |key, num|
+            if person[key] > person[substyle] and key != stlye
+              substyle = key
+            end
+          styles[substyle] += 1
+          end
+
+        end
+      end
+      return substyles.max_by{|k,v| v}
+  end
 end
