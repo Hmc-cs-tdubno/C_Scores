@@ -14,7 +14,11 @@ class Person < ApplicationRecord
 		response = {:status => 2, :message =>"something went wrong"}
 		#initial exception block incase the data was incorrectly formated. 
 		begin	
-			if(file.content_type=="text/csv")
+			csv_types = ["text/csv", "application/vnd.ms-excel"]
+			json_types = ["application/json", "application/octet-stream"]
+
+
+			if(csv_types.include? file.content_type)
 				CSV.foreach(file.path, headers: true) do |row|
 					curhash = row.to_hash
 					styles = {
@@ -32,7 +36,7 @@ class Person < ApplicationRecord
 					Person.create! curhash
 				end
 			
-			elsif(file.content_type=="application/json")
+			elsif(json_types.include? file.content_type)
 				curfile = file.read
 				curhash = JSON.parse(curfile)
 				message = "JSON uploaded"
@@ -51,6 +55,7 @@ class Person < ApplicationRecord
 				end 
 			
 			else
+				puts file.content_type
 				return response = {:status => 4, :message => "Incorrect FileType"}
 			end
 		# Returns whether response saying whether database created new entry or failed to do so	
