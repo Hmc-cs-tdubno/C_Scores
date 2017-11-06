@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171029215145) do
+ActiveRecord::Schema.define(version: 20171106021325) do
 
   create_table "people", force: :cascade do |t|
     t.integer "challenger"
@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 20171029215145) do
     t.string "q18"
     t.integer "user_id"
     t.string "q16"
+    t.string "style"
     t.index ["user_id"], name: "index_people_on_user_id"
   end
 
