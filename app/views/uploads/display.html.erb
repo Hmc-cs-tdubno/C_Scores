@@ -1,7 +1,7 @@
 <% if flash[:notice] %>
-  <script type="text/javascript">
-    alert('<%= flash[:notice].html_safe %>')
-  </script>
+  <div class="alert alert-success">
+    <strong>Success!</strong> <%=flash[:notice].html_safe%>.
+  </div>
   <% end %>
 <div class="mt-4 mx-auto">
     <%if cookies[:hello]%>
@@ -13,10 +13,8 @@
         <div id="graphdiv" class="col-sm-10 col-md-7">
             <h2>Results</h2>
               <svg id ="bargraph" class="graph" width="960" height="500"></svg>
-
-            <svg id="scattergraph" class="graph" width="960" height="500"></svg>
-
-            <table id="stats" class="table table-hover">
+              <svg id="scattergraph" class="graph" width="960" height="500"></svg>
+              <table id="stats" class="table table-hover">
                 <tr>
                     <th scope="row"><strong>Least similarly answered question</strong></th>
                     <td>#2</td>

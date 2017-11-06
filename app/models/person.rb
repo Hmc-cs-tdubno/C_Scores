@@ -74,7 +74,7 @@ the answer to a question is stored, it has chars as key and
 		
 		# Read file and create a hash to add to db
 		# if invalid filetype return error response
-		response = {}
+		response = {:status => 2, :message =>"something went wrong"}
 		#initial exception block incase the data was incorrectly formated. 
 		begin	
 			if(file.content_type=="text/csv")
@@ -108,13 +108,15 @@ the answer to a question is stored, it has chars as key and
 				end 
 			
 			else
-				response = {:status => 4, :message => "Incorrect FileType"}
+				return response = {:status => 4, :message => "Incorrect FileType"}
 			end
 		# Returns whether response saying whether database created new entry or failed to do so	
 			response = {:status => 0, :message => message}
 		rescue ActiveModel::UnknownAttributeError => e
 			puts e
-			response = {:status => 2, :message => e.to_s}
+			bla = e.to_s.gsub!( ' \'', ' (')
+			bla2 = bla.gsub!('\' ', ') ')
+			response = {:status => 2, :message => bla2}
 			return response
 		end 
 		#if it makes it past the exception return the response information. If that status isnt 0 it is an Error
