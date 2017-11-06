@@ -17,14 +17,14 @@ module UsersHelper
       return bla.max_by{|k,v| v}
   end
 
-  def common_challenger_answer(people)
+  def common_style_answer(people, style)
       # Takes in a Person object, returns
       # the primary style of the person
       bla = {}
       for i in 1..18
         answers = {}
         people.each do |person|
-          if person.style = "challenger"
+          if person.style = style
             if answers[person["q#{i}"]]
               answers[person["q#{i}"]]+= 1
             else
