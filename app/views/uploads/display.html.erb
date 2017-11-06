@@ -9,7 +9,6 @@
     <%=cookies[:hello]=0%>
     <%end%>
     
-    
     <div class="row">
         <div id="graphdiv" class="col-sm-10 col-md-7">
             <h2>Results</h2>
@@ -56,8 +55,9 @@
 
     <hr class="hline">
 
-    <div class="ml-2 row">
+    <div class="ml-2 row btn-group-vertical">
         <a href="/"><button type="submit" class="btn btn-primary mx-auto">Upload </button></a>
+      <a href="/delete"><button type="submit" class="btn btn-warning mx-auto">Delete Data</button></a>
     </div>
 
 </div>
@@ -152,6 +152,20 @@
   }
 
 </script>
+<style>
+
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+
+  .dot {
+    stroke: #000;
+  }
+
+</style>
 
 <script>
   function drawScatterGraph(style1, style2) {
@@ -223,7 +237,7 @@
           .data(data)
         .enter().append("circle")
           .attr("class", "dot")
-          .attr("r", 10)
+          .attr("r", 5)
           .attr("cx", function(person) { 
             return x1(person.style1); })
           .attr("cy", function(person) { 

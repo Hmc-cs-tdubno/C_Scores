@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   
   get 'api/bar/' =>'graphing#bar'
   get 'api/scatter/' =>'graphing#scatter'
+  get 'delete' => 'uploads#remove'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

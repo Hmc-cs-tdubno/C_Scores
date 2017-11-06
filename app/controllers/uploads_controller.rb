@@ -8,7 +8,12 @@ class UploadsController < ApplicationController
 
   def new
   end
-
+  
+  def remove
+    Person.where("user_id = ?", current_user.id).destroy_all
+    redirect_to("/")
+  end
+  
   def create
   end
 
