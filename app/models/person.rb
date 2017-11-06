@@ -55,7 +55,6 @@ class Person < ApplicationRecord
 				end 
 			
 			else
-				puts file.content_type
 				return response = {:status => 4, :message => "Incorrect FileType"}
 			end
 		# Returns whether response saying whether database created new entry or failed to do so	

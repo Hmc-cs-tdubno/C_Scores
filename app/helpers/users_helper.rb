@@ -45,14 +45,15 @@ module UsersHelper
       substyles["communicator"]=0
       substyles["contributor"]=0
       substyles["challenger"]=0
+      substyles.delete(style)
       people.each do |person|
         if person.style = style
           substyle = "collaborator"
-          styles.each do |key, num|
-            if person[key] > person[substyle] and key != stlye
+          substyles.each do |key, num|
+            if person[key] > person[substyle]
               substyle = key
             end
-          styles[substyle] += 1
+          substyles[substyle] += 1
           end
 
         end
