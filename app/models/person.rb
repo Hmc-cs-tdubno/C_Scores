@@ -17,15 +17,14 @@ class Person < ApplicationRecord
 			if(file.content_type=="text/csv")
 				CSV.foreach(file.path, headers: true) do |row|
 					curhash = row.to_hash
-					
 					styles = {
-            		:challenger => person[:challenger],
-            		:collaborator => person[:collaborator],
-            		:communicator => person[:communicator],
-            		:contributor => person[:contributor]
+            		:challenger => curhash["challenger"],
+            		:collaborator => curhash["collaborator"],
+            		:communicator => curhash["communicator"],
+            		:contributor => curhash["contributor"]
         			}
-        			currhash["style"] = styles.max_by{|k,v| v}[0]
-
+        			curhash["style"] = styles.max_by{|k,v| v}[0]
+							put curhash["style"]
 					#setting extra equal to empty hash for testing purposes
 					curhash["extra"] = {}
 					message	= "CSV uploaded"
@@ -40,6 +39,13 @@ class Person < ApplicationRecord
 				#go through each new user
 				curhash.each do |i|
 					i["user_id"] = current_user_id
+					styles = {
+            		:challenger => i["challenger"],
+            		:collaborator => i["collaborator"],
+            		:communicator => i["communicator"],
+            		:contributor => i["contributor"]
+        			}
+        			i[:style] = styles.max_by{|k,v| v}[0]
 					puts i
 					Person.create! i
 				end 
