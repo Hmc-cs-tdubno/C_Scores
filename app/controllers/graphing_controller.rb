@@ -34,7 +34,7 @@ class GraphingController < ApplicationController
     # Update frequencies 
     @people.each do |person|
       puts "reaches graphing"
-      frequencies[person["style"].parameterize.underscore.to_sym] += 1
+      frequencies[person["style"].to_sym] += 1
     end 
     data = []
     frequencies.each do |k,v|
