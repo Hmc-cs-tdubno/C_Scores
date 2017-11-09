@@ -28,7 +28,7 @@ class Person < ApplicationRecord
             		:contributor => curhash["contributor"]
         			}
         			curhash["style"] = styles.max_by{|k,v| v}[0]
-							put curhash["style"]
+					puts curhash["style"]
 					#setting extra equal to empty hash for testing purposes
 					curhash["extra"] = {}
 					message	= "CSV uploaded"

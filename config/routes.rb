@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get 'predictions/index'
+
   devise_for :users
     resources :uploads do
       collection {post :import}
