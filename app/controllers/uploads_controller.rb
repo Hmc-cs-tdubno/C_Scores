@@ -20,7 +20,6 @@ class UploadsController < ApplicationController
   def display
     @people = Person.where("user_id = ?", current_user.id)
     
-    puts "hi"
     @most_com = common_answer(@people)
     @most_com_challenger = common_style_answer(@people, "challenger")
     @most_com_contributor = common_style_answer(@people, "contributor")
@@ -43,10 +42,10 @@ class UploadsController < ApplicationController
         puts response
         redirect_to '/display', notice: response[:message]
       else
-        redirect_to '/', notice: response[:message]
+        redirect_to '/', notice: response
       end
     else 
-      redirect_to '/', notice: "please upload a CSV or JSON"
+      redirect_to '/', notice: {message: "please upload a CSV or JSON"}
     end 
   end
 
