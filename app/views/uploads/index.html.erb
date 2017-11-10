@@ -7,16 +7,17 @@
         <button type="submit" class="btn btn-primary mx-auto">Upload</button>
     </form>
 </div> -->
-<% if flash[:notice]=="Signed in successfully." %>
-  
+<% if flash[:notice] == nil%>
+  <%elsif flash[:notice].class == String%>
   <div class="alert alert-success">
     <strong>Success!</strong> <%=flash[:notice].html_safe%>.
   </div>
-  <%elsif flash[:notice]%>
+  <%else%>
   <div class="alert alert-danger">
-    <strong>Danger!</strong> <%=flash[:notice].html_safe%>.
+    <%=puts "hello"%>
+    <%=puts flash[:notice]%>
+    <strong>Danger!</strong> <%=flash[:notice]["message"].html_safe%>.
   </div>
-  <%= puts flash[:notice]%>
   <% end %>
 <div>
   
