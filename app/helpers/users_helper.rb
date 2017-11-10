@@ -53,7 +53,11 @@ module UsersHelper
             if person[key] > person[substyle]
               substyle = key
             end
-          substyles[substyle] += 1
+            puts "i am a substyle"
+            puts substyles
+            puts substyle
+            puts substyles[substyle]= substyles[substyle] + 1
+          # substyles[substyle] += 1
           end
 
         end
