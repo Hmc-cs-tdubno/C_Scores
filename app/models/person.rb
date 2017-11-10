@@ -27,7 +27,9 @@ class Person < ApplicationRecord
             		:communicator => curhash["communicator"],
             		:contributor => curhash["contributor"]
         			}
+        			puts styles
         			curhash["style"] = styles.max_by{|k,v| v}[0]
+
 					puts curhash["style"]
 
 					#setting extra equal to empty hash for testing purposes
@@ -50,11 +52,7 @@ class Person < ApplicationRecord
             		:communicator => i["communicator"],
             		:contributor => i["contributor"]
         			}
-        			puts "MORE PRINTING"
-        			puts "FINDERELLA STORY"
-        			puts styles.max_by{|k,v| v}[0]
         			i[:style] = styles.max_by{|k,v| v}[0]
-					puts i
 					Person.create! i
 				end 
 			

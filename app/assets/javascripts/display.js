@@ -176,9 +176,7 @@ function drawScatterGraph(style1, style2) {
   }
 
 
-    $(document).on('turbolinks:load', function () {
-
-
+    $(document).ready(function () {
         // Show relevant buttons and hide irrelevant graphs when page first loads
         $('.insights').show();
         $("#stats").hide();
