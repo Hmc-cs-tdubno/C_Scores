@@ -22,14 +22,14 @@ class Person < ApplicationRecord
 				CSV.foreach(file.path, headers: true) do |row|
 					curhash = row.to_hash
 					styles = {
-            		:challenger => curhash["challenger"],
-            		:collaborator => curhash["collaborator"],
-            		:communicator => curhash["communicator"],
-            		:contributor => curhash["contributor"]
+            		:challenger => curhash["challenger"].to_i,
+            		:collaborator => curhash["collaborator"].to_i,
+            		:communicator => curhash["communicator"].to_i,
+            		:contributor => curhash["contributor"].to_i
         			}
         			curhash["style"] = styles.max_by{|k,v| v}[0]
-					puts curhash["style"]
-
+					puts styles
+					puts "hello1"
 					#setting extra equal to empty hash for testing purposes
 					curhash["extra"] = {}
 					message	= "CSV uploaded"
