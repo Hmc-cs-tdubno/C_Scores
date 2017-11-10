@@ -5,7 +5,6 @@ class CreatePeople < ActiveRecord::Migration[5.1]
       t.integer :collaborator
       t.integer :communicator
       t.integer :contributor
-      t.text :answers
       t.text :extra
 
       t.timestamps

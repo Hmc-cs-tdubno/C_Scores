@@ -13,3 +13,25 @@
  */
  // Custom bootstrap variables must be set or imported *before* bootstrap.
 @import "bootstrap";
+
+.hline {
+    border-top:  1px solid #b9b9b9;
+}
+
+.legend {
+    border-left: 1px solid #b9b9b9;
+}
+
+.graph {
+    max-height: 100%;
+    width: 100% \9;
+    display:block;
+}
+
+.insights {
+    display:none;
+}
+
+.predictions {
+	display:none;
+}
