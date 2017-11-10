@@ -48,7 +48,7 @@ module UsersHelper
       substyles.delete(style)
       people.each do |person|
         if person.style = style
-          substyle = "collaborator"
+          substyle = substyles.keys[0]
           substyles.each do |key, num|
             if person[key] > person[substyle]
               substyle = key
