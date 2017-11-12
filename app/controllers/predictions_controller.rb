@@ -3,6 +3,6 @@ class PredictionsController < ApplicationController
   end
 
   def analyze
-  	#fill in algorithm call here
+  	#TODO: fill in algorithm call here
   end
 end

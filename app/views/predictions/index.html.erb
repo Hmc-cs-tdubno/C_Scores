@@ -1,4 +1,7 @@
 <h4>Predictions</h4>
+
+<!--This form is where users enter the scores of their hypothetical team. 
+	It sends this input to the predictions controller-->
 <%= form_tag '/predictions/analyze' do %>
     
 	<table>
@@ -45,6 +48,8 @@
     <div><%= submit_tag 'Submit' %></div>
 <% end -%>
 
+
+<!--Turns on the navbar link back to insights on in this page-->
 <script type="text/javascript">
 	$(document).ready(function() {
 		$(".predictions").show();

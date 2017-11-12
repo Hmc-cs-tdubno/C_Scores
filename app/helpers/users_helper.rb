@@ -1,4 +1,6 @@
 module UsersHelper
+  #Each of these functions is called in uploads_controller, and the outputted stats are made displayed in uploads/displays
+
   def common_answer(people)
       # Takes in people data objects, returns
       # the most commonly answered question
