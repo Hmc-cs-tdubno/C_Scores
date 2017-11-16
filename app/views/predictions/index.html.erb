@@ -1,7 +1,55 @@
 <h4>Predictions</h4>
 
+<!--This form is where users enter the scores of their hypothetical team. 
+	It sends this input to the predictions controller-->
+<%= form_tag '/predictions/analyze' do %>
+    
+	<table>
+    <tr>
+    	<th></th>
+    	<th>Collaborator</th>
+    	<th>Comunicator</th>
+    	<th>Contributor</th>
+    	<th>Challenger</th>
+    </tr>
+
+    <tr>
+    	<td><%=label_tag 'Team Member 1' %></td>
+    	<td><%=number_field_tag 'Collaborator:'%></td>
+    	<td><%=number_field_tag 'Comunicator:'%></td>
+    	<td><%=number_field_tag 'Contributor:'%></td>
+    	<td><%=number_field_tag 'Challenger:'%></td>
+	</tr>
+
+	<tr>
+    	<td><%=label_tag 'Team Member 2' %></td>
+    	<td><%=number_field_tag 'Collaborator:'%></td>
+    	<td><%=number_field_tag 'Comunicator:'%></td>
+    	<td><%=number_field_tag 'Contributor:'%></td>
+    	<td><%=number_field_tag 'Challenger:'%></td>
+	</tr>
+
+	<tr>
+    	<td><%=label_tag 'Team Member 3' %></td>
+    	<td><%=number_field_tag 'Collaborator:'%></td>
+    	<td><%=number_field_tag 'Comunicator:'%></td>
+    	<td><%=number_field_tag 'Contributor:'%></td>
+    	<td><%=number_field_tag 'Challenger:'%></td>
+	</tr>
+
+	<tr>
+    	<td><%=label_tag 'Team Member 4' %></td>
+    	<td><%=number_field_tag 'Collaborator:'%></td>
+    	<td><%=number_field_tag 'Comunicator:'%></td>
+    	<td><%=number_field_tag 'Contributor:'%></td>
+    	<td><%=number_field_tag 'Challenger:'%></td>
+	</tr>
+
+    <div><%= submit_tag 'Submit' %></div>
+<% end -%>
 
 
+<!--Turns on the navbar link back to insights on in this page-->
 <script type="text/javascript">
 	$(document).ready(function() {
 		$(".predictions").show();

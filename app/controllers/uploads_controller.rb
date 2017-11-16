@@ -20,6 +20,7 @@ class UploadsController < ApplicationController
   def display
     @people = Person.where("user_id = ?", current_user.id)
     
+    #Makes calls to users_helper to get statistics and make them available in uploads/display 
     @most_com = common_answer(@people)
     @most_com_challenger = common_style_answer(@people, "challenger")
     @most_com_contributor = common_style_answer(@people, "contributor")
