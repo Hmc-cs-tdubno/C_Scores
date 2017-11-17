@@ -6,6 +6,7 @@ class Person < ApplicationRecord
 
 
 	def self.import(file, current_user_id)
+		puts file.class
 		message = ""
 		curhash = {}
 		
@@ -65,6 +66,7 @@ class Person < ApplicationRecord
 			response = {:status => 2, :message => bla2}
 			return response
 		end 
+
 		#if it makes it past the exception return the response information. If that status isnt 0 it is an Error
 		 return response 
 	end
