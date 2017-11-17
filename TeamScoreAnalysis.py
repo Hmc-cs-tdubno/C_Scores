@@ -1,6 +1,6 @@
-
-from nltk.cluster.kmeans import KMeansClusterer
-import numpy
+from sklearn.metrics.pairwise import pairwise_distances
+import random
+import numpy as np
 import itertools
 
 """This file is not well tested at this time, good chance it would run into an error"""
@@ -9,12 +9,15 @@ import itertools
 #Number of times the k-means algorithm is repeated, in order to find best solution
 REPEAT_NUM = 10
 
+#Max number of iterations in the K-medoids algorithm
+K_MEDIODS_ITERATIONS = 100
+
 #About how many teams will be in each cluster. Used to calculate the k of k-means
-APPROX_CLUSTER_SIZE = 4
+APPROX_CLUSTER_SIZE = 2
 
 
 #List of previous data tuples with team scores array and outgoing score
-TEAMS_DATA = []
+TEAMS_DATA = [([1,2,3,4], 8),([4,3,2,1], 8),([-1,-2,-3,-4], 3),([-4,-3,-2,-1], 3)]
 
 def euclidean_distance(v1, v2):
 	'''calculates the classic euclidean distance between to vectors'''
@@ -24,7 +27,7 @@ def euclidean_distance(v1, v2):
 	dist = 0
 	for i in range(len(v1)):
 		dist += (v1[i] - v2[i])**2
-		dist = numpy.sqrt(dist) 
+		dist = np.sqrt(dist) 
 	return dist
 
 def populatePermDict():
@@ -66,7 +69,7 @@ def permute(vector, perm):
 	vector = vector.tolist()
 	sigma = permDict[perm]
 	vector = [vector[sigma[0]], vector[sigma[1]], vector[sigma[2]], vector[sigma[3]]]
-	vector = numpy.array(vector)
+	vector = np.array(vector)
 	return vector
 
 def distance(v1, v2):
@@ -80,14 +83,60 @@ def distance(v1, v2):
 			dist = newDist
 	return dist
 
-def kMeans(vectors, k):
-	'''Uses the nltk.cluster package to find k means among the input vectors. Outputs
-	a list telling which cluster each vector belongs to (in order) and another of the
-	means'''
-	clusterer = (KMeansClusterer(k, distance, repeats = REPEAT_NUM))
-	clusters = clusterer.cluster(vectors, True)
-	means = clusterer.means()
-	return clusters, means
+
+'''
+Description: Takes a list of 'team' vectors and the desired number of medoids and returns a list of final
+			medoids, as well as a dictionary representing the clusters.
+'''
+def kMedoids(vectors, k, tmax = K_MEDIODS_ITERATIONS):
+	"""Note: this function heavily inspired by the paper located at 
+	https://www.researchgate.net/publication/272351873_NumPy_SciPy_Recipes_for_Data_Science_k-Medoids_Clustering"""
+
+	#Precompute distance matrix for efficiency
+	D = pairwise_distances(vectors,metric = distance)
+	#figure out how many teams there are
+	n = len(D)
+
+	if k > n:
+		raise Exception('too many medoids')
+
+	# randomly initialize an array of k medoid indices
+	M = np.arange(n)
+	np.random.shuffle(M)
+	M = np.sort(M[:k])
+
+	 # create a copy of the array of medoid indices
+	Mnew = np.copy(M)
+
+	#Create a dictionary to represent clusters
+	C = {}
+	for t in range(tmax):
+		# determine clusters, i. e. arrays of data indices
+		J = np.argmin(D[:,M], axis=1)
+		for kappa in range(k):
+			C[kappa] = np.where(J==kappa)[0]
+		# update cluster medoids
+		for kappa in range(k):
+			J = np.mean(D[np.ix_(C[kappa],C[kappa])],axis=1)
+			j = np.argmin(J)
+			Mnew[kappa] = C[kappa][j]
+			np.sort(Mnew)
+		# check for convergence
+		if np.array_equal(M, Mnew):
+			break
+		M = np.copy(Mnew)
+	else:
+		# final update of cluster memberships
+		J = np.argmin(D[:,M], axis=1)
+		for kappa in range(k):
+			C[kappa] = np.where(J==kappa)[0]
+
+	# return results
+	return M, C
+
+
+
+
 
 '''
 Description: This function should be run once (at server start?). It uses past data
@@ -102,27 +151,39 @@ Output:      A dictionary whose keys are the 'means' of kMeans (as numpy.array's
 def preAnalyze():
 	vectors = []
 	for team in TEAMS_DATA:
-		vectors.append(numpy.array(team[0]))
-	clusters, means = kMeans(vectors, len(vectors)/APPROX_CLUSTER_SIZE)
-	#list of the number of teams assigned to each mean in order
-	meanScores = {}
-	teamsInMeans = []
-	for i in range(len(means)):
-		#make TeamsInMeans the right length
-		teamsInMeans.append(0)
+		vectors.append(np.array(team[0]))
+	meds, C = kMedoids(vectors, int(len(vectors)/APPROX_CLUSTER_SIZE))
+	
+	#reconfigure meds to be more useful
+	meds = list(map(lambda x: tuple(vectors[x].tolist()), meds))
+	print(meds)
+	
+	#reconfigure the C dictionary to be mure useful
+	Clusters = {}
+	for med_indx in C:
+		Clusters[meds[med_indx]] = C[med_indx].tolist()
+	print(Clusters)
+	#will hold the assigned score to each med
+	medScores = {}
+	#keep track of the number of teams assigned to each med
+	teamsInMeds = {}
+	for medoid in Clusters:
+		#initialize teamsinmeans dictionary entries to 0
+		teamsInMeds[medoid] = 0
 		#populatet ScoreDict with entries to fill in the score of each mean
-		meanScores[means[i]] = 0
-	for i in range(len(clusters)):
-		#Add 1 to the number of teams in the cluster of the current team
-		teamsInMeans[clusters[i]] += 1
-		#Add the score is the score of the current team
-		score = TEAMS_DATA[i][1]
-		#add this score to the score for the current team's mean
-		meanScores[means[clusters[i]]] += score
+		medScores[medoid] = 0
+	for medoid in Clusters:
+		for team_indx in Clusters[medoid]:
+			#Add 1 to the number of teams in the cluster of the current team
+			teamsInMeds[medoid] += 1
+			#Add the score is the score of the current team
+			score = TEAMS_DATA[team_indx][1]
+			#add this score to the score for the current team's mean
+			medScores[medoid] += score
 	#get the AVERAGE score for teams in a mean
-	for i in range(len(means)):
-		meanScores[means[i]] = meanScores[means[i]]/teamsInMeans[i]
-	return meanScores
+	for medoid in medScores:
+		medScores[medoid] = medScores[medoid]/teamsInMeds[medoid]
+	return medScores
 
 
 '''
@@ -141,7 +202,7 @@ Paraeters:
 				function.
 '''
 def analyze(newTeam, meanScores):
-	newTeam = numpy.array(newTeam)
+	newTeam = np.array(newTeam)
 	#newTeam used as a placeholder for the closest mean
 	closeMean = newTeam
 	#start dist of as inf to ensure we select a closer mean
@@ -152,7 +213,3 @@ def analyze(newTeam, meanScores):
 			closeMean = mean
 	#return the score associated with that mean
 	return meanScores[closeMean]
-
-def test():
-	print "hi"
-	return 5    
