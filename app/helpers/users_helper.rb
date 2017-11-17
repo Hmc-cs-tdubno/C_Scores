@@ -52,18 +52,29 @@ module UsersHelper
       substyles["challenger"]=0
       #only look at non-main styles
       substyles.delete(style)
+      # Keep track of people whose primary style is 'style'
+      number_of_styles = 0
+      puts style
+
       people.each do |person|
         if person.style = style
           substyle = substyles.keys[0]
           substyles.each do |key, num|
             if person[key] > person[substyle]
               substyle = key
+              substyles[substyle] += 1
             end
-            substyles[substyle] += 1
           end
-
+          number_of_styles += 1
         end
       end
-      return substyles.max_by{|k,v| v}
+
+      if number_of_styles > 0
+        return substyles.max_by{|k,v| v}
+      else
+        return "No people of style:" + style
+      end
+
+
   end
 end
