@@ -1,3 +1,4 @@
+
 from nltk.cluster.kmeans import KMeansClusterer
 import numpy
 import itertools
@@ -98,7 +99,7 @@ Output:      A dictionary whose keys are the 'means' of kMeans (as numpy.array's
 			This should be stored somehow in the application and used as a parameter of
 			analyze(newTeam, meanScores) every time it is called.
 '''
-def preAnalyze()
+def preAnalyze():
 	vectors = []
 	for team in TEAMS_DATA:
 		vectors.append(numpy.array(team[0]))
@@ -151,3 +152,7 @@ def analyze(newTeam, meanScores):
 			closeMean = mean
 	#return the score associated with that mean
 	return meanScores[closeMean]
+
+def test():
+	print "hi"
+	return 5    
