@@ -66,13 +66,8 @@ def writeCSV(filename):
 def writeJSON(filename):
     """ opens json file with name filename and writes numRows rows of
     random quiz data """
-<<<<<<< HEAD
     if not filename.endswith('.json'):
         filename += '.json'
-=======
-    if not filename.endswith(".json"):
-        filename+=".json"
->>>>>>> e0d998398a94065aec30a7518e51fc0102c6d469
     with open(filename, 'w') as f:
         for x in range(numRows):
             scores = quizScores()

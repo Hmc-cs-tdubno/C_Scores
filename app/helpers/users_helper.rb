@@ -1,9 +1,13 @@
 module UsersHelper
+  #Each of these functions is called in uploads_controller, and the outputted stats are made displayed in uploads/displays
+
   def common_answer(people)
-      # Takes in a Person object, returns
-      # the primary style of the person
+      # Takes in people data objects, returns
+      # the most commonly answered question
       bla = {}
+      # for each question, count number of each response
       for i in 1..18
+        #response, frequency pair for each response to a question
         answers = {}
         people.each do |person|
           if answers[person["q#{i}"]]
@@ -18,12 +22,13 @@ module UsersHelper
   end
 
   def common_style_answer(people, style)
-      # Takes in a Person object, returns
-      # the primary style of the person
+      # Takes in a people data objects, and a style, returns
+      # the most common answer among people of that style
       bla = {}
       for i in 1..18
         answers = {}
         people.each do |person|
+          #filter out people with other styles
           if person.style = style
             if answers[person["q#{i}"]]
               answers[person["q#{i}"]]+= 1
@@ -45,20 +50,21 @@ module UsersHelper
       substyles["communicator"]=0
       substyles["contributor"]=0
       substyles["challenger"]=0
+      #only look at non-main styles
       substyles.delete(style)
       # Keep track of people whose primary style is 'style'
       number_of_styles = 0
       puts style
 
       people.each do |person|
-        if person.style == style
-          substyle = "collaborator"
+        if person.style = style
+          substyle = substyles.keys[0]
           substyles.each do |key, num|
             if person[key] > person[substyle]
               substyle = key
+              substyles[substyle] += 1
             end
           end
-          substyles[substyle] += 1
           number_of_styles += 1
         end
       end

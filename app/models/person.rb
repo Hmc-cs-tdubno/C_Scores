@@ -22,6 +22,8 @@ class Person < ApplicationRecord
 			if(csv_types.include? file.content_type)
 				CSV.foreach(file.path, headers: true) do |row|
 					curhash = row.to_hash
+					
+					#Calculating the team player style of a person
 					styles = {
             		:challenger => curhash["challenger"].to_i,
             		:collaborator => curhash["collaborator"].to_i,
@@ -44,6 +46,7 @@ class Person < ApplicationRecord
 				#go through each new user
 				curhash.each do |i|
 					i["user_id"] = current_user_id
+					#Calculating the team player style of a person
 					styles = {
             		:challenger => i["challenger"],
             		:collaborator => i["collaborator"],
