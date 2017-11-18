@@ -1,33 +1,36 @@
-from sklearn.metrics.pairwise import pairwise_distances
 import random
 import numpy as np
 import itertools
 
-"""This file is not well tested at this time, good chance it would run into an error"""
-
-
-#Number of times the k-means algorithm is repeated, in order to find best solution
-REPEAT_NUM = 10
+"""This file is not well tested at this time, good chance it has bugs"""
 
 #Max number of iterations in the K-medoids algorithm
 K_MEDIODS_ITERATIONS = 100
 
 #About how many teams will be in each cluster. Used to calculate the k of k-means
-APPROX_CLUSTER_SIZE = 2
+APPROX_CLUSTER_SIZE = 4
 
 
 #List of previous data tuples with team scores array and outgoing score
 TEAMS_DATA = [([1,2,3,4], 8),([4,3,2,1], 8),([-1,-2,-3,-4], 3),([-4,-3,-2,-1], 3)]
 
+def flatten(L):
+	newL = []
+	for i in range(len(L)):
+		if type(L[i]) == list:
+			newL.extend(flatten(L[i]))
+		else: newL.append(L[i])
+	return newL
+
 def euclidean_distance(v1, v2):
 	'''calculates the classic euclidean distance between to vectors'''
 	#list(itertools.chain(L)) flattens L , needed since here v1.tolist() gives a list of lists
-	v1 = list(itertools.chain(v1.tolist()))
-	v2 = list(itertools.chain(v2.tolist()))
+	v1 = flatten(v1.tolist())
+	v2 = flatten(v2.tolist())
 	dist = 0
 	for i in range(len(v1)):
 		dist += (v1[i] - v2[i])**2
-		dist = np.sqrt(dist) 
+	dist = np.sqrt(dist) 
 	return dist
 
 def populatePermDict():
@@ -83,6 +86,16 @@ def distance(v1, v2):
 			dist = newDist
 	return dist
 
+def pairwiseDistances(vectors):
+	n = len(vectors)
+	D = np.reshape(np.arange(n*n), (n,n))
+	for i in range(n):
+		for j in range(i+1):
+			dist = distance(vectors[i], vectors[j])
+			D[i,j] = dist
+			D[j,i] = dist
+	return D
+
 
 '''
 Description: Takes a list of 'team' vectors and the desired number of medoids and returns a list of final
@@ -93,7 +106,8 @@ def kMedoids(vectors, k, tmax = K_MEDIODS_ITERATIONS):
 	https://www.researchgate.net/publication/272351873_NumPy_SciPy_Recipes_for_Data_Science_k-Medoids_Clustering"""
 
 	#Precompute distance matrix for efficiency
-	D = pairwise_distances(vectors,metric = distance)
+	D = pairwiseDistances(vectors)
+	print(D)
 	#figure out how many teams there are
 	n = len(D)
 
@@ -142,47 +156,60 @@ def kMedoids(vectors, k, tmax = K_MEDIODS_ITERATIONS):
 Description: This function should be run once (at server start?). It uses past data
 			(currently hardcoded into this file) in the form of a list of team, score
 			tuples to calculate means and assign them scores. This is with the help of
-			the kMeans function above to generate means.
-Output:      A dictionary whose keys are the 'means' of kMeans (as numpy.array's)
-			and whose values are the outgoing score (float) associated with that mean.
-			This should be stored somehow in the application and used as a parameter of
-			analyze(newTeam, meanScores) every time it is called.
+			the kMedoids function above to generate medoids.
+Output:      A dictionary whose keys are the 'medoids' of kMedoids (as tuples of lists, so 
+			that they are hashable) and whose values are the outgoing score 
+			(float) associated with that medoid. This should be stored somehow in 
+			the application and used as a parameter of analyze(newTeam, medScores) 
+			every time it is called.
 '''
-def preAnalyze():
+def preAnalyze(seed = TEAMS_DATA):
 	vectors = []
-	for team in TEAMS_DATA:
+	for team in seed:
 		vectors.append(np.array(team[0]))
 	meds, C = kMedoids(vectors, int(len(vectors)/APPROX_CLUSTER_SIZE))
-	
+
+	print('medoids:')
+	for point_idx in meds:
+		print( vectors[point_idx] )
+
+	print('')
+	print('clustering result:')
+	for label in C:
+		for point_idx in C[label]:
+			print('label {0}:　{1}'.format(label, vectors[point_idx]))
+
 	#reconfigure meds to be more useful
 	meds = list(map(lambda x: tuple(vectors[x].tolist()), meds))
-	print(meds)
+
+
 	
-	#reconfigure the C dictionary to be mure useful
+	#reconfigure the C dictionary to be mure useful, as pairs {med_indx: list of cluter's vectors}
 	Clusters = {}
-	for med_indx in C:
-		Clusters[meds[med_indx]] = C[med_indx].tolist()
-	print(Clusters)
+	for medI in C:
+		Clusters[medI] = C[medI].tolist()
+	
 	#will hold the assigned score to each med
 	medScores = {}
+	
 	#keep track of the number of teams assigned to each med
 	teamsInMeds = {}
-	for medoid in Clusters:
+
+	for medI in Clusters:
 		#initialize teamsinmeans dictionary entries to 0
-		teamsInMeds[medoid] = 0
+		teamsInMeds[medI] = 0
 		#populatet ScoreDict with entries to fill in the score of each mean
-		medScores[medoid] = 0
-	for medoid in Clusters:
-		for team_indx in Clusters[medoid]:
+		medScores[medI] = 0
+
+		for team_indx in Clusters[medI]:
 			#Add 1 to the number of teams in the cluster of the current team
-			teamsInMeds[medoid] += 1
+			teamsInMeds[medI] += 1
 			#Add the score is the score of the current team
-			score = TEAMS_DATA[team_indx][1]
+			score = seed[team_indx][1]
 			#add this score to the score for the current team's mean
-			medScores[medoid] += score
-	#get the AVERAGE score for teams in a mean
-	for medoid in medScores:
-		medScores[medoid] = medScores[medoid]/teamsInMeds[medoid]
+			medScores[medI] += score
+		#get the AVERAGE score for teams in a cluster, and add the med vector ot the value
+		medScores[medI] = (vectors[medI], medScores[medI]/teamsInMeds[medI])
 	return medScores
 
 
@@ -195,21 +222,22 @@ Output:     An float value describing the predicted success of input team.
 Paraeters:
 	newTeam - a 16-vector (currently expected as a list of 4 lists length 4, each
 				representing the scores of a particualr team member) selected by the user
-	meanScores - a python dictionary computed earlier (possibly server start?) whose keys 
-				are the 'means' used to classify newTeam (as numpy.array's) and whose values
-				are the outgoing score (float) associated with that mean. This should be stored
+	medScores - a python dictionary computed earlier (possibly server start?) whose keys 
+				are the indicies of medoids used to classify newTeam and whose values
+				are the outgoing score the mediod and the score (float) associated with that mean. This should be stored
 				somehow in the application and entered as this parameter for every call of this
 				function.
 '''
-def analyze(newTeam, meanScores):
+def analyze(newTeam, medScores):
 	newTeam = np.array(newTeam)
 	#newTeam used as a placeholder for the closest mean
-	closeMean = newTeam
+	closeMed = 0
 	#start dist of as inf to ensure we select a closer mean
 	dist = float("inf")
 	#find the closest mean
-	for mean in meanScores.keys():
-		if distance(newTeam, mean) < dist:
-			closeMean = mean
+	for medI in medScores:
+		if distance(newTeam, medScores[medI][0]) < dist:
+			closeMed = medI
+			dist = distance(newTeam, medScores[medI][0])
 	#return the score associated with that mean
-	return meanScores[closeMean]
+	return medScores[medI][1]
