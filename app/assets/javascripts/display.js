@@ -1,7 +1,8 @@
  function drawBarGraph () {
     var margin = {top: 20, right: 20, bottom: 70, left: 40},
         width = 600 - margin.left - margin.right,
-        height = 300 - margin.top - margin.bottom;
+        height = 300 - margin.top - margin.bottom,
+        padding = 50;
 
 
     // set the ranges
@@ -9,35 +10,41 @@
 
     var y = d3.scale.linear().range([height, 0]);
 
-    // define the axis
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom")
-
-
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left")
-        .ticks(10);
-
-
     // add the SVG element
     var svg = d3.select("#bargraph")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
       .append("g")
-        .attr("transform", 
+        .attr("transform",
               "translate(" + margin.left + "," + margin.top + ")");
+
+    // Keep track of largest frequency for setting axis ticks
+    var maxfreq = 0
 
     var data = d3.json("http://localhost:3000/api/bar",function(data){
       data.data.forEach(function(d){
-      d.style = d.style;
-      d.freq = +d.freq;  
-
+        d.style = d.style;
+        d.freq = +d.freq;
+        if (d.freq > maxfreq) {
+          maxfreq = d.freq
+        }
       })
       // scale the range of the data
       x.domain(data.data.map(function(d) { return d.style; }));
       y.domain([0, d3.max(data.data, function(d) { return d.freq; })]);
+
+      // define the axis
+      var xAxis = d3.svg.axis()
+          .scale(x)
+          .orient("bottom")
+
+      var formatyAxis = d3.format('.0f')
+
+      var yAxis = d3.svg.axis()
+          .scale(y)
+          .orient("left")
+          .tickFormat(formatyAxis)
+          .ticks(maxfreq);
 
       // add axis
       svg.append("g")
@@ -55,9 +62,10 @@
           .call(yAxis)
         .append("text")
           .attr("transform", "rotate(-90)")
-          .attr("y", 5)
-          .attr("dy", ".71em")
-          .style("text-anchor", "end")
+          .attr("y", 0 - margin.left)
+          .attr("x",0 - (height / 2))
+          .attr("dy", "1em")
+          .style("text-anchor", "middle")
           .text("Frequency");
 
 
@@ -110,7 +118,6 @@ function drawScatterGraph(style1, style2) {
       if (error) throw error;
       data = data.data
       data.forEach(function(person) {
-        console.log(person)
         person.style1 = +person.style1;
         person.style2 = +person.style2;
       });
@@ -120,23 +127,24 @@ function drawScatterGraph(style1, style2) {
 
       svg2.append("g")
           .attr("class", "x axis")
-          .attr("transform", "translate(0," + height1 + ")")
+          .attr("transform", "translate(20," + height1 + ")")
           .call(xAxis1)
         .append("text")
           .attr("class", "label")
-          .attr("x", width1 - (width1 / 7))
-          .attr("y",  -6)
+          .attr("transform", "translate(" + (width1 /2) + "," + (margin1.bottom - 20) + ")")
+          .style("text-anchor", "middle")
           .text(style1);
 
       svg2.append("g")
           .attr("class", "y axis")
+          .attr("transform", "translate(20,0)")
           .call(yAxis1)
         .append("text")
-          .attr("class", "label")
           .attr("transform", "rotate(-90)")
-          .attr("y1", 6)
-          .attr("dy", ".71em")
-          .style("text-anchor", "end")
+          .attr("y", 0 - margin1.left - 10)
+          .attr("x",0 - (height1 / 2))
+          .attr("dy", "1em")
+          .style("text-anchor", "middle")
           .text(style2)
 
       svg2.selectAll(".dot")
@@ -144,9 +152,9 @@ function drawScatterGraph(style1, style2) {
         .enter().append("circle")
           .attr("class", "dot")
           .attr("r", 5)
-          .attr("cx", function(person) { 
+          .attr("cx", function(person) {
             return x1(person.style1); })
-          .attr("cy", function(person) { 
+          .attr("cy", function(person) {
             return y1(person.style2); })
           .style("fill", "black")
 
@@ -155,13 +163,13 @@ function drawScatterGraph(style1, style2) {
       //   .enter().append("g")
       //     .attr("class", "legend")
       //     .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
-      // 
+      //
       // legend.append("rect")
       //     .attr("x", width1 - 18)
       //     .attr("width", 18)
       //     .attr("height", 18)
       //     .style("fill", color);
-      // 
+      //
       // legend.append("text")
       //     .attr("x", width1 - 24)
       //     .attr("y", 9)
@@ -176,55 +184,6 @@ function drawScatterGraph(style1, style2) {
   }
 
 
-    $(document).ready(function () {
-        // Show relevant buttons and hide irrelevant graphs when page first loads
-        $('.insights').show();
-        $("#stats").hide();
-        $(".scatterlegend").hide();
-
-        // Draw the graphs
-        drawBarGraph();
-        drawScatterGraph("Collaborator", "Contributor");
-        $("#scattergraph").hide();
-
-
-        // These functions hide graphs when we select a different graph to view
-      var curcookie = '<%=cookies[:hello]%>'
-      $('.insights').show();
-      if (curcookie==0){
-        showstart();
-      }
-      else if(curcookie==1) {
-        showbarbutton();
-      }
-      else if(curcookie==2) {
-        showscatter();
-      }
-      else if(curcookie==3) {
-        statbutton();
-      }
-        $("#barbutton").click(function () {
-            showbarbutton();
-            document.cookie = "hello = 1";
-        });
-
-        $("#scatterbutton").click(function () {
-            showscatter();
-            document.cookie = "hello = 2";
-        });
-
-        $("#statbutton").click(function () {
-            statbutton();
-            document.cookie = "hello = 3";
-        });
-
-
-        // Change scatter graph axes
-        $("#newscatter").click(function () {
-          drawScatterGraph($("#style1").val(), $("#style2").val());
-        })
-    });
-    
     function showscatter(){
       $("#bargraph").hide();
       $("#stats").hide();
@@ -247,7 +206,7 @@ function drawScatterGraph(style1, style2) {
       $("#bargraph").show(800);
       $(".scatterlegend").hide();
     }
-    
+
     function statbutton(){
       $("#bargraph").hide();
       $("#scattergraph").hide();

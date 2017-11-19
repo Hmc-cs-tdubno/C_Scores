@@ -8,7 +8,7 @@
     <%else %>
     <%=cookies[:hello]=0%>
     <%end%>
-    
+
     <div class="row">
         <div id="graphdiv" class="col-sm-10 col-md-7">
             <h2>Results</h2>
@@ -22,18 +22,22 @@
                     <td><%=@most_com[0][1..-1]%></td>
                 </tr>
                 <tr>
+                    <td></td>
                     <th scope="row"><strong>Among challengers:</strong></th>
                     <td><%=@most_com_challenger[0][1..-1]%></td>
                 </tr>
                 <tr>
+                    <td></td>
                     <th scope="row"><strong>Among contributors:</strong></th>
                     <td><%=@most_com_contributor[0][1..-1]%></td>
                 </tr>
                 <tr>
+                    <td></td>
                     <th scope="row"><strong>Among collaborators:</strong></th>
                     <td><%=@most_com_collaborator[0][1..-1]%></td>
                 </tr>
                 <tr>
+                    <td></td>
                     <th scope="row"><strong>Among communicators:</strong></th>
                     <td><%=@most_com_communicator[0][1..-1]%></td>
                 </tr>
@@ -41,21 +45,25 @@
                     <th scope="row"><strong>Most common secondary style:</strong>
                 </tr>
                 <tr>
+                    <td></td>
                     <th scope="row"><strong>For challengers:</strong></th>
                     </th>
                     <td><%=@substyle_challenger[0]%></td>
                 </tr>
                 <tr>
+                    <td></td>
                     <th scope="row"><strong>For contributors:</strong></th>
                     </th>
                     <td><%=@substyle_contributor[0]%></td>
                 </tr>
                 <tr>
+                    <td></td>
                     <th scope="row"><strong>For collaborators:</strong></th>
                     </th>
                     <td><%=@substyle_collaborator[0]%></td>
                 </tr>
                 <tr>
+                    <td></td>
                     <th scope="row"><strong>For communicators:</strong></th>
                     </th>
                     <td><%=@substyle_communicator[0]%></td>
@@ -71,7 +79,7 @@
                 <p>X axis:</p>
                 <select id="style1">
                   <option>Collaborator</option>
-                  <option>Contributor</option>
+                  <option selected="selected">Contributor</option>
                   <option>Challenger</option>
                   <option>Communicator</option>
                 </select>
@@ -97,10 +105,54 @@
 
 </div>
 
-<%= javascript_include_tag "https://d3js.org/d3.v3.min.js" %>
 <%= javascript_include_tag "display" %>
+<script type="text/javascript">
+$(document).ready(function () {
+    // Show relevant buttons and hide irrelevant graphs when page first loads
+    $('.insights').show();
+    $("#stats").hide();
+    $(".scatterlegend").hide();
+
+    // Draw the graphs
+    drawBarGraph();
+    drawScatterGraph("Collaborator", "Contributor");
+    $("#scattergraph").hide();
 
 
+    // These functions hide graphs when we select a different graph to view
+  var curcookie = '<%=cookies[:hello]%>'
+  $('.insights').show();
+  if (curcookie==0){
+    showstart();
+  }
+  else if(curcookie==1) {
+    showbarbutton();
+  }
+  else if(curcookie==2) {
+    showscatter();
+  }
+  else if(curcookie==3) {
+    statbutton();
+  }
+    $("#barbutton").click(function () {
+        showbarbutton();
+        document.cookie = "hello = 1";
+    });
+
+    $("#scatterbutton").click(function () {
+        showscatter();
+        document.cookie = "hello = 2";
+    });
+
+    $("#statbutton").click(function () {
+        statbutton();
+        document.cookie = "hello = 3";
+    });
 
 
-
+    // Change scatter graph axes
+    $("#newscatter").click(function () {
+      drawScatterGraph($("#style1").val(), $("#style2").val());
+    })
+});
+</script>
