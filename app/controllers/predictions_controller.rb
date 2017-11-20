@@ -4,17 +4,21 @@ class PredictionsController < ApplicationController
   end
 
   def analyze
-    y = "butts"
-    RubyPython.start
-    sys = RubyPython.import("sys")
-    sys.path.append('.')
-    sys.path.append("./nltk")
-    print sys.path
-    print y
-  	anal = RubyPython.import("TeamScoreAnalysis")
-    # x = anal.test().rubify
-    RubyPython.stop
-    puts "hello"
+    members = []
+    styles = ['Collaborator','Comunicator','Contributor','Challenger']
+    (1..4).each do |k|
+      bla=[]
+      styles.each do |sty|
+        bla+=[params[sty+k.to_s+':']]
+      end 
+      members+=[bla]
+    end 
+    #             |
+    # system call V
+    results = `python TeamScoreAnalysis.py #{members}`
+    puts results
+    puts "welcome"
     # puts x
+    render json: {status: 'SUCCESS', message: 'Loaded all posts', data: results}, status: :ok
   end
 end
