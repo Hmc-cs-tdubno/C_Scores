@@ -70,6 +70,8 @@ gem 'bootstrap', '= 4.0.0.alpha6'
 gem 'sprockets-rails', :require => 'sprockets/railtie'
 gem 'popper_js'
 
+# D3 Gems
+gem 'd3_rails'
 
 # Devise
 gem 'devise'
