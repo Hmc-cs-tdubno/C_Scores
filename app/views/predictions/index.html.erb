@@ -2,9 +2,9 @@
 
 <!--This form is where users enter the scores of their hypothetical team. 
 	It sends this input to the predictions controller-->
-<%= form_tag '/predictions/analyze' do %>
+<%= form_tag "/predictions/analyze", :id => 'predict-form' do %>
     
-	<table>
+	<table class = "table table-responisve">
     <tr>
     	<th></th>
     	<th>Collaborator</th>
@@ -15,38 +15,41 @@
 
     <tr>
     	<td><%=label_tag 'Team Member 1' %></td>
-    	<td><%=number_field_tag 'Collaborator:'%></td>
-    	<td><%=number_field_tag 'Comunicator:'%></td>
-    	<td><%=number_field_tag 'Contributor:'%></td>
-    	<td><%=number_field_tag 'Challenger:'%></td>
+    	<td><%=number_field_tag 'Collaborator1:'%></td>
+    	<td><%=number_field_tag 'Comunicator1:'%></td>
+    	<td><%=number_field_tag 'Contributor1:'%></td>
+    	<td><%=number_field_tag 'Challenger1:'%></td>
 	</tr>
 
 	<tr>
     	<td><%=label_tag 'Team Member 2' %></td>
-    	<td><%=number_field_tag 'Collaborator:'%></td>
-    	<td><%=number_field_tag 'Comunicator:'%></td>
-    	<td><%=number_field_tag 'Contributor:'%></td>
-    	<td><%=number_field_tag 'Challenger:'%></td>
+    	<td><%=number_field_tag 'Collaborator2:'%></td>
+    	<td><%=number_field_tag 'Comunicator2:'%></td>
+    	<td><%=number_field_tag 'Contributor2:'%></td>
+    	<td><%=number_field_tag 'Challenger2:'%></td>
 	</tr>
 
 	<tr>
     	<td><%=label_tag 'Team Member 3' %></td>
-    	<td><%=number_field_tag 'Collaborator:'%></td>
-    	<td><%=number_field_tag 'Comunicator:'%></td>
-    	<td><%=number_field_tag 'Contributor:'%></td>
-    	<td><%=number_field_tag 'Challenger:'%></td>
+    	<td><%=number_field_tag 'Collaborator3:'%></td>
+    	<td><%=number_field_tag 'Comunicator3:'%></td>
+    	<td><%=number_field_tag 'Contributor3:'%></td>
+    	<td><%=number_field_tag 'Challenger3:'%></td>
 	</tr>
 
 	<tr>
     	<td><%=label_tag 'Team Member 4' %></td>
-    	<td><%=number_field_tag 'Collaborator:'%></td>
-    	<td><%=number_field_tag 'Comunicator:'%></td>
-    	<td><%=number_field_tag 'Contributor:'%></td>
-    	<td><%=number_field_tag 'Challenger:'%></td>
+    	<td><%=number_field_tag 'Collaborator4:'%></td>
+    	<td><%=number_field_tag 'Comunicator4:'%></td>
+    	<td><%=number_field_tag 'Contributor4:'%></td>
+    	<td><%=number_field_tag 'Challenger4:'%></td>
 	</tr>
 
     <div><%= submit_tag 'Submit' %></div>
 <% end -%>
+
+<div class="poopy">
+</div>
 
 
 <!--Turns on the navbar link back to insights on in this page-->
@@ -54,4 +57,19 @@
 	$(document).ready(function() {
 		$(".predictions").show();
 	});
+  
+  $('form').submit(function () {
+      console.log("I love pineapple butts")
+      var valuesToSubmit = $(this).serialize();
+      $.ajax({
+        type: "POST",
+        url:$(this).attr('action'),
+        data: valuesToSubmit,
+        dataType: "JSON",
+        success: function(json) {
+        $('.poopy').append("<p>" + JSON.stringify(json) + "</p>");
+      }
+      })
+      return false;
+  })
 </script>

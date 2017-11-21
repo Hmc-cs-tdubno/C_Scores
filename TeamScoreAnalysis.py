@@ -1,7 +1,7 @@
 import random
 import numpy as np
 import itertools
-
+import sys
 """This file is not well tested at this time, good chance it has bugs"""
 
 #Max number of iterations in the K-medoids algorithm
@@ -241,3 +241,15 @@ def analyze(newTeam, medScores):
 			dist = distance(newTeam, medScores[medI][0])
 	#return the score associated with that mean
 	return medScores[medI][1]
+	
+def main(argv):
+	print(argv)
+	import ast
+	l = ast.literal_eval(''.join(argv))
+	print(l,"trial2 ")
+	print(l[0][0])
+	print(''.join(argv),"here")
+	print(argv[0])
+
+if __name__ == "__main__":
+   main(sys.argv[1:])

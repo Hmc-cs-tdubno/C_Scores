@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   get 'predictions/index'
-  get 'predictions/analyze'
+  post 'predictions/analyze'
 
   devise_for :users
     resources :uploads do
