@@ -1,10 +1,9 @@
+var margin = {top: 20, right: 20, bottom: 70, left: 40},
+    width = 600 - margin.left - margin.right,
+    height = 300 - margin.top - margin.bottom,
+    padding = 50;
+
  function drawBarGraph () {
-    var margin = {top: 20, right: 20, bottom: 70, left: 40},
-        width = 600 - margin.left - margin.right,
-        height = 300 - margin.top - margin.bottom,
-        padding = 50;
-
-
     // set the ranges
     var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
 
@@ -17,6 +16,7 @@
       .append("g")
         .attr("transform",
               "translate(" + margin.left + "," + margin.top + ")");
+
 
     // Keep track of largest frequency for setting axis ticks
     var maxfreq = 0
@@ -48,17 +48,17 @@
 
       // add axis
       svg.append("g")
-          .attr("class", "x axis")
+          .attr("class", "x-axis axis")
           .attr("transform", "translate(0," + height + ")")
           .call(xAxis)
-        .selectAll("texat")
+        .selectAll("text")
           .style("text-anchor", "end")
           .attr("dx", "3em")
           .attr("dy", ".55em")
           .attr("transform", "rotate(0)" );
 
       svg.append("g")
-          .attr("class", "y axis")
+          .attr("class", "y-axis axis")
           .call(yAxis)
         .append("text")
           .attr("transform", "rotate(-90)")
@@ -80,7 +80,97 @@
           .attr("height", function(d) { return height - y(d.freq); });
 
     });
-  }
+}
+function updateBarGraph() {
+  var url = "http://localhost:3000/api/bar?";
+
+  // Grab relevant values from data set 'select' tag
+  // and add them as parameters to url
+  var include = $('#current-datasets').val();
+  console.log(include);
+  var i = 0
+  include.forEach(function (elem) {
+    url += ("include" + i +"=" + elem + "&")
+    i++;
+  });
+  url = url.slice(0, -1);
+
+  // Get the data again
+  d3.json(url, function(error, data) {
+    // Keep track of largest frequency for setting axis ticks
+    var maxfreq = 0
+    console.log(data.data)
+    data.data.forEach(function(d){
+      d.style = d.style;
+      d.freq = +d.freq;
+      if (d.freq > maxfreq) {
+        maxfreq = d.freq
+      }
+    })
+
+    // set the ranges
+    var x = d3.scale.ordinal().rangeRoundBands([0, width], .05);
+    var y = d3.scale.linear().range([height, 0]);
+
+  	// Scale the range of the data again
+    x.domain(data.data.map(function(d) { return d.style; }));
+    y.domain([0, d3.max(data.data, function(d) { return d.freq; })]);
+
+
+    // Select the section we want to apply our changes to
+    var svg = d3.select("#bargraph");
+
+    // KEEP X AXIS the same
+    var xAxis = d3.svg.axis()
+        .scale(x)
+        .orient("bottom");
+
+    svg.select(".x-axis")
+      .call(xAxis).selectAll("text")
+        .style("text-anchor", "end")
+        .attr("dx", "3em")
+        .attr("dy", ".55em")
+        .attr("transform", "rotate(0)" );
+
+    // UPDATE Y AXIS
+    var formatyAxis = d3.format('.0f')
+
+    var yAxis = d3.svg.axis()
+        .scale(y)
+        .orient("left")
+        .tickFormat(formatyAxis)
+        .ticks(maxfreq);
+
+    svg.select(".y-axis").transition()
+      .duration(750)
+      .call(yAxis);
+
+    // // // // // // // // //
+    // UPDATE SOME BARS YO //
+    // // // // // // // // //
+
+    var bar = svg.selectAll(".bar").data(data.data)
+
+
+    // Add new bars
+    bar.enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", function(d) { return x(d.style); })
+      .attr("width", x.rangeBand())
+      .attr("y", function(d) { return y(d.freq); })
+      .attr("height", function(d) { return height - y(d.freq); });
+
+    // Remove old bars
+    bar.exit().remove();
+
+    //Update existing bars
+    bar.transition()
+      .duration(750)
+      .attr("y", function(d) { return y(d.freq); })
+      .attr("height", function(d) { return height - y(d.freq); });
+  });
+}
+
 
 function drawScatterGraph(style1, style2) {
     $("#scattergraph").remove()
