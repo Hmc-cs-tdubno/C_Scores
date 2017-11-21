@@ -74,7 +74,7 @@
 
         <!-- Legend -->
         <div class="col-sm-2 col-md-5 sidebar legend">
-            <div class="scatterlegend" class="ml-2 container">
+            <div class="scatterlegend ml-2 container">
                 <h3>Legend</h3>
                 <p>X axis:</p>
                 <select id="style1">
@@ -92,6 +92,11 @@
                 </select>
                 <button id="newscatter" class="btn btn-primary">Go!</button>
             </div>
+            <div class="barlegend ml-2 container">
+              <h3>Legend</h3>
+              <%= select_tag 'current-datasets', options_for_select(@dataset_ids), {:multiple => true}%>
+              <button id='dataset-button'>Update Graph</button>
+            </div>
         </div>
 
     </div>
@@ -105,6 +110,7 @@
 
 </div>
 
+<script src="https://d3js.org/d3-axis.v1.min.js"></script>
 <%= javascript_include_tag "display" %>
 <script type="text/javascript">
 $(document).ready(function () {
@@ -153,6 +159,10 @@ $(document).ready(function () {
     // Change scatter graph axes
     $("#newscatter").click(function () {
       drawScatterGraph($("#style1").val(), $("#style2").val());
+    })
+
+    $("#dataset-button").click(function () {
+      updateBarGraph()
     })
 });
 </script>
