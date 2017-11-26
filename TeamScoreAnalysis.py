@@ -23,8 +23,7 @@ def flatten(L):
 	return newL
 
 def euclidean_distance(v1, v2):
-	'''calculates the classic euclidean distance between to vectors'''
-	#list(itertools.chain(L)) flattens L , needed since here v1.tolist() gives a list of lists
+	'''calculates the classic euclidean distance between two vectors'''
 	v1 = flatten(v1.tolist())
 	v2 = flatten(v2.tolist())
 	dist = 0
@@ -87,11 +86,14 @@ def distance(v1, v2):
 	return dist
 
 def pairwiseDistances(vectors):
+	'''Helper Function for kMedoids which increases efficiency by putting all distances in a
+	2D array so they only need to be calculated once'''
 	n = len(vectors)
 	D = np.reshape(np.arange(n*n), (n,n))
 	for i in range(n):
 		for j in range(i+1):
 			dist = distance(vectors[i], vectors[j])
+			#Array is symetric, so we fill in on both sides of the diagonal together
 			D[i,j] = dist
 			D[j,i] = dist
 	return D
@@ -124,6 +126,7 @@ def kMedoids(vectors, k, tmax = K_MEDIODS_ITERATIONS):
 
 	#Create a dictionary to represent clusters
 	C = {}
+	#Everything in here is somewhat black magic indexing found at the credited link above
 	for t in range(tmax):
 		# determine clusters, i. e. arrays of data indices
 		J = np.argmin(D[:,M], axis=1)
@@ -146,7 +149,7 @@ def kMedoids(vectors, k, tmax = K_MEDIODS_ITERATIONS):
 			C[kappa] = np.where(J==kappa)[0]
 
 	# return results
-	return M, C
+	return C
 
 
 
@@ -167,23 +170,8 @@ def preAnalyze(seed = TEAMS_DATA):
 	vectors = []
 	for team in seed:
 		vectors.append(np.array(team[0]))
-	meds, C = kMedoids(vectors, int(len(vectors)/APPROX_CLUSTER_SIZE))
+	C = kMedoids(vectors, int(len(vectors)/APPROX_CLUSTER_SIZE))
 
-	print('medoids:')
-	for point_idx in meds:
-		print( vectors[point_idx] )
-
-	print('')
-	print('clustering result:')
-	for label in C:
-		for point_idx in C[label]:
-			print('label {0}:　{1}'.format(label, vectors[point_idx]))
-
-	#reconfigure meds to be more useful
-	meds = list(map(lambda x: tuple(vectors[x].tolist()), meds))
-
-
-	
 	#reconfigure the C dictionary to be mure useful, as pairs {med_indx: list of cluter's vectors}
 	Clusters = {}
 	for medI in C:
