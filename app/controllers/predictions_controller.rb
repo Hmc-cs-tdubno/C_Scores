@@ -19,6 +19,7 @@ class PredictionsController < ApplicationController
     puts results
     puts "welcome"
     # puts x
-    render json: {status: 'SUCCESS', message: 'Loaded all posts', data: results}, status: :ok
+    results= results[0..3]
+    render json: {status: 'SUCCESS', message: 'Loaded all posts', data: results.to_f}, status: :ok
   end
 end

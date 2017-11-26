@@ -67,7 +67,7 @@
         data: valuesToSubmit,
         dataType: "JSON",
         success: function(json) {
-        $('.poopy').append("<p>" + JSON.stringify(json) + "</p>");
+        $('.poopy').append("<p>" + json.data + "</p>");
       }
       })
       return false;
