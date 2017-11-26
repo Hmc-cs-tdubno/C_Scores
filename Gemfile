@@ -75,3 +75,4 @@ gem 'd3_rails'
 
 # Devise
 gem 'devise'
+

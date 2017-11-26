@@ -22,13 +22,14 @@ def flatten(L):
 		else: newL.append(L[i])
 	return newL
 
-def euclidean_distance(v1, v2):
+def euclideanDistance(v1, v2):
 	'''calculates the classic euclidean distance between two vectors'''
-	v1 = flatten(v1.tolist())
-	v2 = flatten(v2.tolist())
 	dist = 0
 	for i in range(len(v1)):
-		dist += (v1[i] - v2[i])**2
+		if type(v1[i]) == int:
+			dist += (v1[i] - v2[i])**2
+		else:
+			dist += (euclideanDistance(v1[i],v2[i]))**2
 	dist = np.sqrt(dist) 
 	return dist
 
@@ -68,10 +69,8 @@ def permute(vector, perm):
 	elements shuffled according to that permutation. There is almost certainly a more
 	elegant way to do this.'''
 	permDict = populatePermDict()
-	vector = vector.tolist()
 	sigma = permDict[perm]
 	vector = [vector[sigma[0]], vector[sigma[1]], vector[sigma[2]], vector[sigma[3]]]
-	vector = np.array(vector)
 	return vector
 
 def distance(v1, v2):
@@ -80,7 +79,7 @@ def distance(v1, v2):
 	possible way'''
 	dist = float("inf")
 	for i in range(24):
-		newDist = euclidean_distance(permute(v1, i), v2)
+		newDist = euclideanDistance(permute(v1, i), v2)
 		if newDist <= dist:
 			dist = newDist
 	return dist
@@ -109,7 +108,6 @@ def kMedoids(vectors, k, tmax = K_MEDIODS_ITERATIONS):
 
 	#Precompute distance matrix for efficiency
 	D = pairwiseDistances(vectors)
-	print(D)
 	#figure out how many teams there are
 	n = len(D)
 
@@ -169,7 +167,7 @@ Output:      A dictionary whose keys are the 'medoids' of kMedoids (as tuples of
 def preAnalyze(seed = TEAMS_DATA):
 	vectors = []
 	for team in seed:
-		vectors.append(np.array(team[0]))
+		vectors.append(team[0])
 	C = kMedoids(vectors, int(len(vectors)/APPROX_CLUSTER_SIZE))
 
 	#reconfigure the C dictionary to be mure useful, as pairs {med_indx: list of cluter's vectors}
@@ -217,8 +215,7 @@ Paraeters:
 				function.
 '''
 def analyze(newTeam, medScores):
-	newTeam = np.array(newTeam)
-	#newTeam used as a placeholder for the closest mean
+	#a placeholder for the closest mean
 	closeMed = 0
 	#start dist of as inf to ensure we select a closer mean
 	dist = float("inf")

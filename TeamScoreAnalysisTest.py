@@ -29,13 +29,11 @@ def generateSet(size):
 def preAnalTest(size):
 	seed = generateSet(size)
 	medScores = preAnalyze(seed)
-	#for team in seed:
-	#	print(team)
 	print(medScores)
 	return medScores
 
 def analTest(medScores):
-	newTeam = np.array(generateTeam()[0])
+	newTeam = generateTeam()[0]
 	score = analyze(newTeam, medScores)
 	print(newTeam)
 	print(score)
