@@ -31,7 +31,7 @@ class UploadsController < ApplicationController
     @substyle_collaborator = common_substyle(@people, "collaborator")
     @substyle_communicator = common_substyle(@people, "communicator")
 
-    @dataset_ids = Person.distinct.pluck(:dataset_id)
+    @dataset_ids = Person.where("user_id = ?", current_user.id).distinct.pluck(:dataset_id)
   end
 
   def import

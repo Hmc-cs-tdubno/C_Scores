@@ -17,7 +17,6 @@ var margin = {top: 20, right: 20, bottom: 70, left: 40},
         .attr("transform",
               "translate(" + margin.left + "," + margin.top + ")");
 
-
     // Keep track of largest frequency for setting axis ticks
     var maxfreq = 0
 
@@ -81,19 +80,9 @@ var margin = {top: 20, right: 20, bottom: 70, left: 40},
 
     });
 }
-function updateBarGraph() {
-  var url = "http://localhost:3000/api/bar?";
 
-  // Grab relevant values from data set 'select' tag
-  // and add them as parameters to url
-  var include = $('#current-datasets').val();
-  console.log(include);
-  var i = 0
-  include.forEach(function (elem) {
-    url += ("include" + i +"=" + elem + "&")
-    i++;
-  });
-  url = url.slice(0, -1);
+function updateBarGraph() {
+  var url = d3UpdateUrl("http://localhost:3000/api/bar?");
 
   // Get the data again
   d3.json(url, function(error, data) {
@@ -204,7 +193,7 @@ function drawScatterGraph(style1, style2) {
 
 
     // TODO: Throw a link to rails thing in there
-    d3.json("http://localhost:3000/api/scatter?style1="+style1+"&style2="+style2, function(error, data) {
+    d3.json("http://localhost:3000/api/scatter&style1="+style1+"&style2="+style2, function(error, data) {
       if (error) throw error;
       data = data.data
       data.forEach(function(person) {
@@ -267,41 +256,132 @@ function drawScatterGraph(style1, style2) {
       //     .style("text-anchor", "end")
       //     .text(function(d) { return d; });
 
-      if ($('#bargraph').is(":visible")) {
-        $('#scattergraph').hide();
-      }
+    if ($('#bargraph').is(":visible")) {
+      $('#scattergraph').hide();
+    }
+  });
+}
+
+function updateScatterGraph() {
+  var url = d3UpdateUrl("http://localhost:3000/api/scatter?")+"&style1="+style1+"&style2="+style2
+
+  d3.json("http://localhost:3000/api/scatter&style1="+style1+"&style2="+style2, function(error, data) {
+    if (error) throw error;
+    data = data.data
+    data.forEach(function(person) {
+      person.style1 = +person.style1;
+      person.style2 = +person.style2;
     });
-  }
+
+    // Scale the axes
+    var x1 = d3.scale.linear()
+        .range([0, width1]);
+
+    var y1 = d3.scale.linear()
+        .range([height1, 0]);
+
+    // create axis objects
+    var xAxis1 = d3.svg.axis()
+        .scale(x1)
+        .orient("bottom");
+
+    var yAxis1 = d3.svg.axis()
+        .scale(y1)
+        .orient("left");
+
+    // set domains
+    x1.domain(d3.extent(data, function(person) { return person.style1; })).nice();
+    y1.domain(d3.extent(data, function(person) { return person.style2; })).nice();
+
+    svg2.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(20," + height1 + ")")
+        .call(xAxis1)
+      .append("text")
+        .attr("class", "label")
+        .attr("transform", "translate(" + (width1 /2) + "," + (margin1.bottom - 20) + ")")
+        .style("text-anchor", "middle")
+        .text(style1);
+
+    svg2.append("g")
+        .attr("class", "y axis")
+        .attr("transform", "translate(20,0)")
+        .call(yAxis1)
+      .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 0 - margin1.left - 10)
+        .attr("x",0 - (height1 / 2))
+        .attr("dy", "1em")
+        .style("text-anchor", "middle")
+        .text(style2)
+
+    svg2.selectAll(".dot")
+        .data(data)
+      .enter().append("circle")
+        .attr("class", "dot")
+        .attr("r", 5)
+        .attr("cx", function(person) {
+          return x1(person.style1); })
+        .attr("cy", function(person) {
+          return y1(person.style2); })
+        .style("fill", "black");
+
+    if ($('#bargraph').is(":visible")) {
+      $('#scattergraph').hide();
+    }
+  });
+}
 
 
-    function showscatter(){
-      $("#bargraph").hide();
-      $("#stats").hide();
-      $(".legend").show(800);
-      $(".hline").show(800);
-      $("#scattergraph").show(800);
-      $(".scatterlegend").show(800);
-    }
-    function showstart(){
-      $('.insights').show();
-      $("#scattergraph").hide();
-      $("#stats").hide();
-      $(".scatterlegend").hide();
-    }
-    function showbarbutton(){
-      $("#scattergraph").hide();
-      $("#stats").hide();
-      $(".legend").show(800);
-      $(".hline").show(800);
-      $("#bargraph").show(800);
-      $(".scatterlegend").hide();
-    }
+/////////////////////////
+// UI UPDATE FUNCTIONS //
+////////////////////////
 
-    function statbutton(){
-      $("#bargraph").hide();
-      $("#scattergraph").hide();
-      $(".hline").hide(400);
-      $(".legend").hide(400);
-      $("#stats").show(800);
-      $(".scatterlegend").hide();
-    }
+function showscatter(){
+  $("#bargraph").hide();
+  $("#stats").hide();
+  $(".legend").show(800);
+  $(".hline").show(800);
+  $("#scattergraph").show(800);
+  $(".scatterlegend").show(800);
+}
+function showstart(){
+  $('.insights').show();
+  $("#scattergraph").hide();
+  $("#stats").hide();
+  $(".scatterlegend").hide();
+}
+function showbarbutton(){
+  $("#scattergraph").hide();
+  $("#stats").hide();
+  $(".legend").show(800);
+  $(".hline").show(800);
+  $("#bargraph").show(800);
+  $(".scatterlegend").hide();
+}
+
+function statbutton(){
+  $("#bargraph").hide();
+  $("#scattergraph").hide();
+  $(".hline").hide(400);
+  $(".legend").hide(400);
+  $("#stats").show(800);
+  $(".scatterlegend").hide();
+}
+
+
+//////////////////////////
+//   HELPER FUNCTIONS   //
+//////////////////////////
+
+function d3UpdateUrl(url) {
+  // Grab relevant values from data set 'select' tag
+  // and add them as parameters to url
+  var include = $('#current-datasets').val();
+  var i = 0
+  include.forEach(function (elem) {
+    url += ("include" + i +"=" + elem + "&")
+    i++;
+  });
+  return url.slice(0, -1);
+}
