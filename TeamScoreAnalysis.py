@@ -1,6 +1,4 @@
-import random
 import numpy as np
-import itertools
 import sys
 """This file is not well tested at this time, good chance it has bugs"""
 
@@ -12,7 +10,7 @@ APPROX_CLUSTER_SIZE = 4
 
 
 #List of previous data tuples with team scores array and outgoing score
-TEAMS_DATA = [([1,2,3,4], 8),([4,3,2,1], 8),([-1,-2,-3,-4], 3),([-4,-3,-2,-1], 3)]
+TEAMS_DATA = [([[1,1,1,1],[2,2,2,2],[3,3,3,3],[4,4,4,4]], 8),([[4,4,4,4],[3,3,3,3],[2,2,2,2],[1,1,1,1]], 8),([[-1,-1,-1,-1],[-2,-2,-2,-2],[-3,-3,-3,-3],[-4,-4,-4,-4]], 3),([[-4,-4,-4,-4],[-3,-3,-3,-3],[-2,-2,-2,-2],[-1,-1,-1,-1]], 3)]
 
 def flatten(L):
 	newL = []
@@ -22,14 +20,14 @@ def flatten(L):
 		else: newL.append(L[i])
 	return newL
 
-def euclidean_distance(v1, v2):
-	'''calculates the classic euclidean distance between to vectors'''
-	#list(itertools.chain(L)) flattens L , needed since here v1.tolist() gives a list of lists
-	v1 = flatten(v1.tolist())
-	v2 = flatten(v2.tolist())
+def euclideanDistance(v1, v2):
+	'''calculates the classic euclidean distance between two vectors'''
 	dist = 0
 	for i in range(len(v1)):
-		dist += (v1[i] - v2[i])**2
+		if type(v1[i]) == int:
+			dist += (v1[i] - v2[i])**2
+		else:
+			dist += (euclideanDistance(v1[i],v2[i]))**2
 	dist = np.sqrt(dist) 
 	return dist
 
@@ -69,10 +67,8 @@ def permute(vector, perm):
 	elements shuffled according to that permutation. There is almost certainly a more
 	elegant way to do this.'''
 	permDict = populatePermDict()
-	vector = vector.tolist()
 	sigma = permDict[perm]
 	vector = [vector[sigma[0]], vector[sigma[1]], vector[sigma[2]], vector[sigma[3]]]
-	vector = np.array(vector)
 	return vector
 
 def distance(v1, v2):
@@ -81,17 +77,20 @@ def distance(v1, v2):
 	possible way'''
 	dist = float("inf")
 	for i in range(24):
-		newDist = euclidean_distance(permute(v1, i), v2)
+		newDist = euclideanDistance(permute(v1, i), v2)
 		if newDist <= dist:
 			dist = newDist
 	return dist
 
 def pairwiseDistances(vectors):
+	'''Helper Function for kMedoids which increases efficiency by putting all distances in a
+	2D array so they only need to be calculated once'''
 	n = len(vectors)
 	D = np.reshape(np.arange(n*n), (n,n))
 	for i in range(n):
 		for j in range(i+1):
 			dist = distance(vectors[i], vectors[j])
+			#Array is symetric, so we fill in on both sides of the diagonal together
 			D[i,j] = dist
 			D[j,i] = dist
 	return D
@@ -107,7 +106,6 @@ def kMedoids(vectors, k, tmax = K_MEDIODS_ITERATIONS):
 
 	#Precompute distance matrix for efficiency
 	D = pairwiseDistances(vectors)
-	print(D)
 	#figure out how many teams there are
 	n = len(D)
 
@@ -124,6 +122,7 @@ def kMedoids(vectors, k, tmax = K_MEDIODS_ITERATIONS):
 
 	#Create a dictionary to represent clusters
 	C = {}
+	#Everything in here is somewhat black magic indexing found at the credited link above
 	for t in range(tmax):
 		# determine clusters, i. e. arrays of data indices
 		J = np.argmin(D[:,M], axis=1)
@@ -146,7 +145,7 @@ def kMedoids(vectors, k, tmax = K_MEDIODS_ITERATIONS):
 			C[kappa] = np.where(J==kappa)[0]
 
 	# return results
-	return M, C
+	return C
 
 
 
@@ -166,24 +165,9 @@ Output:      A dictionary whose keys are the 'medoids' of kMedoids (as tuples of
 def preAnalyze(seed = TEAMS_DATA):
 	vectors = []
 	for team in seed:
-		vectors.append(np.array(team[0]))
-	meds, C = kMedoids(vectors, int(len(vectors)/APPROX_CLUSTER_SIZE))
+		vectors.append(team[0])
+	C = kMedoids(vectors, int(len(vectors)/APPROX_CLUSTER_SIZE))
 
-	print('medoids:')
-	for point_idx in meds:
-		print( vectors[point_idx] )
-
-	print('')
-	print('clustering result:')
-	for label in C:
-		for point_idx in C[label]:
-			print('label {0}:　{1}'.format(label, vectors[point_idx]))
-
-	#reconfigure meds to be more useful
-	meds = list(map(lambda x: tuple(vectors[x].tolist()), meds))
-
-
-	
 	#reconfigure the C dictionary to be mure useful, as pairs {med_indx: list of cluter's vectors}
 	Clusters = {}
 	for medI in C:
@@ -229,8 +213,7 @@ Paraeters:
 				function.
 '''
 def analyze(newTeam, medScores):
-	newTeam = np.array(newTeam)
-	#newTeam used as a placeholder for the closest mean
+	#a placeholder for the closest mean
 	closeMed = 0
 	#start dist of as inf to ensure we select a closer mean
 	dist = float("inf")
@@ -243,13 +226,12 @@ def analyze(newTeam, medScores):
 	return medScores[medI][1]
 	
 def main(argv):
-	print(argv)
+	#x = preAnalyze();
 	import ast
-	l = ast.literal_eval(''.join(argv))
-	print(l,"trial2 ")
-	print(l[0][0])
-	print(''.join(argv),"here")
-	print(argv[0])
+	#l = ast.literal_eval(''.join(argv))
+	#y = analyze(l,x)
+	print(4.57)
+	
 
 if __name__ == "__main__":
    main(sys.argv[1:])
