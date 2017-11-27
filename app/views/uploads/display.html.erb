@@ -90,12 +90,20 @@
                   <option>Challenger</option>
                   <option>Communicator</option>
                 </select>
-                <button id="newscatter" class="btn btn-primary">Go!</button>
+
             </div>
             <div class="barlegend ml-2 container">
-              <%= select_tag 'current-datasets', options_for_select(@dataset_ids), {:multiple => true}%>
-              <button id='dataset-button'>Update Graph</button>
+              <!-- <%= select_tag 'current-datasets', options_for_select(@dataset_ids), {:multiple => true}%> -->
+              <% @dataset_ids.each do |dataset| %>
+                <%= label_tag dataset %>
+                <%= check_box_tag 'datasets[]', dataset, false, {class: 'datasets'} %>
+                <br>
+              <% end %>
             </div>
+            <div class="ml-4">
+              <button id="dataset-button" class="btn btn-primary">Go!</button>
+            </div>
+
         </div>
 
     </div>

@@ -170,6 +170,7 @@ function drawScatterGraph() {
 
     //Create url for grabing data
     var url = d3UpdateUrl("http://localhost:3000/api/scatter?")
+    console.log(url)
     if (url != "http://localhost:3000/api/scatter") {
       url = url + "&style1="+style1+"&style2="+style2
     } else {
@@ -402,11 +403,12 @@ function statbutton(){
 function d3UpdateUrl(url) {
   // Grab relevant values from data set 'select' tag
   // and add them as parameters to url
-  var include = $('#current-datasets').val();
   var i = 0
-  include.forEach(function (elem) {
-    url += ("include" + i +"=" + elem + "&")
-    i++;
+  $('.datasets').each(function (index) {
+    if ($(this).is(":checked")) {
+      url += ("include" + i +"=" + $(this).val() + "&")
+      i++;
+    }
   });
   return url.slice(0, -1);
 }
