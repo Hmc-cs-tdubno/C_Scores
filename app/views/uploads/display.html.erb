@@ -74,8 +74,8 @@
 
         <!-- Legend -->
         <div class="col-sm-2 col-md-5 sidebar legend">
+            <h3>Legend</h3>
             <div class="scatterlegend ml-2 container">
-                <h3>Legend</h3>
                 <p>X axis:</p>
                 <select id="style1">
                   <option>Collaborator</option>
@@ -93,7 +93,6 @@
                 <button id="newscatter" class="btn btn-primary">Go!</button>
             </div>
             <div class="barlegend ml-2 container">
-              <h3>Legend</h3>
               <%= select_tag 'current-datasets', options_for_select(@dataset_ids), {:multiple => true}%>
               <button id='dataset-button'>Update Graph</button>
             </div>
@@ -121,7 +120,7 @@ $(document).ready(function () {
 
     // Draw the graphs
     drawBarGraph();
-    drawScatterGraph("Collaborator", "Contributor");
+    drawScatterGraph();
     $("#scattergraph").hide();
 
 
@@ -158,11 +157,12 @@ $(document).ready(function () {
 
     // Change scatter graph axes
     $("#newscatter").click(function () {
-      drawScatterGraph($("#style1").val(), $("#style2").val());
+      updateScatterGraph();
     })
 
     $("#dataset-button").click(function () {
       updateBarGraph()
+      updateScatterGraph()
     })
 });
 </script>

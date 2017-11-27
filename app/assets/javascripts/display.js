@@ -47,7 +47,7 @@ var margin = {top: 20, right: 20, bottom: 70, left: 40},
 
       // add axis
       svg.append("g")
-          .attr("class", "x-axis axis")
+          .attr("class", "x-axis-bar axis")
           .attr("transform", "translate(0," + height + ")")
           .call(xAxis)
         .selectAll("text")
@@ -57,7 +57,7 @@ var margin = {top: 20, right: 20, bottom: 70, left: 40},
           .attr("transform", "rotate(0)" );
 
       svg.append("g")
-          .attr("class", "y-axis axis")
+          .attr("class", "y-axis-bar axis")
           .call(yAxis)
         .append("text")
           .attr("transform", "rotate(-90)")
@@ -114,7 +114,7 @@ function updateBarGraph() {
         .scale(x)
         .orient("bottom");
 
-    svg.select(".x-axis")
+    svg.select(".x-axis-bar")
       .call(xAxis).selectAll("text")
         .style("text-anchor", "end")
         .attr("dx", "3em")
@@ -130,7 +130,7 @@ function updateBarGraph() {
         .tickFormat(formatyAxis)
         .ticks(maxfreq);
 
-    svg.select(".y-axis").transition()
+    svg.select(".y-axis-bar").transition()
       .duration(750)
       .call(yAxis);
 
@@ -161,10 +161,8 @@ function updateBarGraph() {
 }
 
 
-function drawScatterGraph(style1, style2) {
-    $("#scattergraph").remove()
-    style1 = style1.toLowerCase();
-    style2 = style2.toLowerCase();
+function drawScatterGraph() {
+    [style1, style2] = getStyles()
     var margin1 = {top: 20, right: 20, bottom: 70, left: 40},
         width1 = 600 - margin1.left - margin1.right,
         height1 = 300 - margin1.top - margin1.bottom;
@@ -185,7 +183,7 @@ function drawScatterGraph(style1, style2) {
         .scale(y1)
         .orient("left");
 
-    var svg2 = d3.select("#graphdiv").append("svg").attr("id", "scattergraph")
+    var svg2 = d3.select("#scattergraph")
         .attr("width", width1 + margin1.left + margin1.right)
         .attr("height", height1 + margin1.top + margin1.bottom)
       .append("g")
@@ -193,7 +191,7 @@ function drawScatterGraph(style1, style2) {
 
 
     // TODO: Throw a link to rails thing in there
-    d3.json("http://localhost:3000/api/scatter&style1="+style1+"&style2="+style2, function(error, data) {
+    d3.json("http://localhost:3000/api/scatter?style1="+style1+"&style2="+style2, function(error, data) {
       if (error) throw error;
       data = data.data
       data.forEach(function(person) {
@@ -205,7 +203,7 @@ function drawScatterGraph(style1, style2) {
       y1.domain(d3.extent(data, function(person) { return person.style2; })).nice();
 
       svg2.append("g")
-          .attr("class", "x axis")
+          .attr("class", "x-axis-scatter axis")
           .attr("transform", "translate(20," + height1 + ")")
           .call(xAxis1)
         .append("text")
@@ -215,7 +213,7 @@ function drawScatterGraph(style1, style2) {
           .text(style1);
 
       svg2.append("g")
-          .attr("class", "y axis")
+          .attr("class", "y-axis-scatter axis")
           .attr("transform", "translate(20,0)")
           .call(yAxis1)
         .append("text")
@@ -263,68 +261,99 @@ function drawScatterGraph(style1, style2) {
 }
 
 function updateScatterGraph() {
-  var url = d3UpdateUrl("http://localhost:3000/api/scatter?")+"&style1="+style1+"&style2="+style2
+  [style1, style2] = getStyles()
+  console.log(style1)
+  var url = d3UpdateUrl("http://localhost:3000/api/scatter?")
+  console.log(url)
+  if (url != "http://localhost:3000/api/scatter") {
+    url = url + "&style1="+style1+"&style2="+style2
+  } else {
+    url = url + "?style1="+style1+"&style2="+style2
+  }
 
-  d3.json("http://localhost:3000/api/scatter&style1="+style1+"&style2="+style2, function(error, data) {
+  d3.json(url, function(error, data) {
     if (error) throw error;
+    console.log(data)
     data = data.data
     data.forEach(function(person) {
       person.style1 = +person.style1;
       person.style2 = +person.style2;
     });
 
-    // Scale the axes
-    var x1 = d3.scale.linear()
-        .range([0, width1]);
 
-    var y1 = d3.scale.linear()
-        .range([height1, 0]);
+    // Scale the axes
+    var x = d3.scale.linear()
+        .range([0, width]);
+
+    var y = d3.scale.linear()
+        .range([height, 0]);
 
     // create axis objects
-    var xAxis1 = d3.svg.axis()
-        .scale(x1)
+    var xAxis = d3.svg.axis()
+        .scale(x)
         .orient("bottom");
 
-    var yAxis1 = d3.svg.axis()
-        .scale(y1)
+    var yAxis = d3.svg.axis()
+        .scale(y)
         .orient("left");
 
     // set domains
-    x1.domain(d3.extent(data, function(person) { return person.style1; })).nice();
-    y1.domain(d3.extent(data, function(person) { return person.style2; })).nice();
+    x.domain(d3.extent(data, function(person) { return person.style1; })).nice();
+    y.domain(d3.extent(data, function(person) { return person.style2; })).nice();
 
-    svg2.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(20," + height1 + ")")
-        .call(xAxis1)
-      .append("text")
-        .attr("class", "label")
-        .attr("transform", "translate(" + (width1 /2) + "," + (margin1.bottom - 20) + ")")
-        .style("text-anchor", "middle")
-        .text(style1);
+    var svg = d3.select("#scattergraph")
 
-    svg2.append("g")
-        .attr("class", "y axis")
-        .attr("transform", "translate(20,0)")
-        .call(yAxis1)
-      .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 0 - margin1.left - 10)
-        .attr("x",0 - (height1 / 2))
-        .attr("dy", "1em")
-        .style("text-anchor", "middle")
-        .text(style2)
+    // Update Axes
+    svg.select(".x-axis-scatter").transition()
+      .duration(1000)
+      .call(xAxis);
 
-    svg2.selectAll(".dot")
-        .data(data)
-      .enter().append("circle")
+    svg.select(".y-axis-scatter").transition()
+      .duration(100)
+      .call(yAxis);
+
+    // // // // // // // // //
+    // UPDATE SOME Dots YO //
+    // // // // // // // // //
+    var dots = svg.selectAll(".dot").data(data)
+
+    dots.enter().append("circle")
         .attr("class", "dot")
         .attr("r", 5)
         .attr("cx", function(person) {
-          return x1(person.style1); })
+          return x(person.style1); })
         .attr("cy", function(person) {
-          return y1(person.style2); })
-        .style("fill", "black");
+          return y(person.style2); })
+        .style("fill", "black")
+
+    // Add new dots
+    dots.transition()  // Transition from old to new
+        .duration(1000)  // Length of animation
+        .each("start", function() {  // Start animation
+            d3.select(this)  // 'this' means the current element
+                .attr("fill", "red")  // Change color
+                .attr("r", 5);  // Change size
+        })
+        .delay(function(d, i) {
+            return i / data.length * 500;  // Dynamic delay (i.e. each item delays a little longer)
+        })
+        //.ease("linear")  // Transition easing - default 'variable' (i.e. has acceleration), also: 'circle', 'elastic', 'bounce', 'linear'
+        .attr("cx", function(d) {
+            return x(d.style1);  // Circle's X
+        })
+        .attr("cy", function(d) {
+            return y(d.style2);  // Circle's Y
+        })
+        .each("end", function() {  // End animation
+            d3.select(this)  // 'this' means the current element
+                .transition()
+                .duration(500)
+                .attr("fill", "black")  // Change color
+                .attr("r", 2);  // Change radius
+        });
+
+        dots.exit().remove()
+
 
     if ($('#bargraph').is(":visible")) {
       $('#scattergraph').hide();
@@ -384,4 +413,14 @@ function d3UpdateUrl(url) {
     i++;
   });
   return url.slice(0, -1);
+}
+
+function getStyles() {
+  var style1 = $('#style1').val();
+  var style2 = $('#style2').val()
+  style1 = style1.toLowerCase();
+  style2 = style2.toLowerCase();
+  console.log(style1)
+
+  return [style1, style2]
 }

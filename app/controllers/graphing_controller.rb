@@ -9,15 +9,42 @@ class GraphingController < ApplicationController
     style2 = params[:style2]
 
     # Grab the uploaded data for the current user
-    @people= Person.where("user_id = ?", current_user.id)
+    @people = []
+
+    #TODO: MAKE THIS A FUNCTION
+    # If the user wishes to filter dataset from graph run the following
+    if !(params.keys.include? "include0")
+      current_user.people.find_each do |person|
+        @people.push person
+      end
+    else
+      # Grab data from each dataset in :include and add it to people
+      params.each do |key, dataset|
+        puts key
+        if key.include? "include"
+          current_user.people.where({dataset_id: dataset}).find_each do |person|
+            @people.push person
+          end
+        end
+      end
+    end
+
     #TODO make this better
+    puts @people.length
     data = []
     @people.each do |person|
+      puts "STYLE1"
+      puts style1
+      puts person[style1]
+      puts "STYLE2"
+      puts person[style2]
       data+=[
         {:style1 => person[style1],
         :style2 => person[style2]}
       ]
     end
+
+    puts data
     render json: {status: 'SUCCESS', message: 'Loaded all posts', data: data}, status: :ok
   end
 
@@ -26,17 +53,15 @@ class GraphingController < ApplicationController
 
     # If the user wishes to filter dataset from graph run the following
     if !(params.keys.include? "include0")
-      puts "NO params"
-      Person.where("user_id = ?", current_user.id).find_each do |person|
+      current_user.people.find_each do |person|
         @people.push person
       end
     else
       # Grab data from each dataset in :include and add it to people
-      puts "YES PARAMS"
       params.each do |key, dataset|
         puts key
         if key.include? "include"
-          Person.where({user_id: current_user.id, dataset_id: dataset}).find_each do |person|
+          current_user.people.where({dataset_id: dataset}).find_each do |person|
             @people.push person
           end
         end
