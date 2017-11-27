@@ -10,7 +10,7 @@
     <%end%>
 
     <div class="row">
-        <div id="graphdiv" class="col-sm-10 col-md-7">
+        <div id="graphdiv" class="col-sm-11 col-md-8">
             <h2>Results</h2>
               <!--Three possible elements, only one visible at a time-->
               <svg id ="bargraph" class="graph" width="960" height="500"></svg>
@@ -73,7 +73,7 @@
         </div>
 
         <!-- Legend -->
-        <div class="col-sm-2 col-md-5 sidebar legend">
+        <div class="col-sm-1 col-md-4 sidebar legend">
             <h3>Legend</h3>
             <div class="scatterlegend ml-2 container">
                 <p>X axis:</p>
@@ -157,12 +157,12 @@ $(document).ready(function () {
 
     // Change scatter graph axes
     $("#newscatter").click(function () {
-      updateScatterGraph();
+      drawScatterGraph();
     })
 
     $("#dataset-button").click(function () {
       updateBarGraph()
-      updateScatterGraph()
+      drawScatterGraph()
     })
 });
 </script>
