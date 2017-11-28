@@ -228,11 +228,11 @@ def analyze(newTeam, medScores):
 	return medScores[medI][1]
 	
 def main(argv):
-	#x = preAnalyze();
+	x = preAnalyze();
 	import ast
-	#l = ast.literal_eval(''.join(argv))
-	#y = analyze(l,x)
-	print(4.57)
+	l = ast.literal_eval(''.join(argv))
+	y = analyze(l,x)
+	print(y)
 	
 
 if __name__ == "__main__":
