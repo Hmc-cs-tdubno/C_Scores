@@ -44,7 +44,7 @@ var margin = {top: 20, right: 70, bottom: 70, left: 40},
           .scale(y)
           .orient("left")
           .tickFormat(formatyAxis)
-          .ticks(maxfreq);
+          .ticks(maxfreq/4);
 
       // add axis
       svg.append("g")
@@ -128,8 +128,12 @@ function updateBarGraph() {
     var yAxis = d3.svg.axis()
         .scale(y)
         .orient("left")
-        .tickFormat(formatyAxis)
-        .ticks(maxfreq);
+        .tickFormat(formatyAxis);
+
+    if (maxfreq < 10) {
+      yAxis = yAxis.ticks(maxfreq)
+    }
+
 
     svg.select(".y-axis-bar").transition()
       .duration(750)
@@ -210,8 +214,11 @@ function drawScatterGraph() {
         person.style2 = +person.style2;
       });
 
+
       x.domain(d3.extent(data, function(person) { return person.style1; })).nice();
       y.domain(d3.extent(data, function(person) { return person.style2; })).nice();
+
+
 
       svg2.append("g")
           .attr("class", "x-axis-scatter axis")
@@ -245,6 +252,64 @@ function drawScatterGraph() {
           .attr("cy", function(person) {
             return y(person.style2); })
           .style("fill", "black")
+
+
+      ////////////////////
+      // TRENDLINE CODE //
+      ////////////////////
+
+      // var lg = calcLinear(data, "style1", "style2", d3.min(data, function(d){ return d.style1}), d3.min(data, function(d){ return d.style2}));
+      // console.log(lg)
+      // svg2.append("line")
+	    //     .attr("class", "regression")
+	    //     .attr("x1", x(lg.ptA.x))
+	    //     .attr("y1", y(lg.ptA.y))
+	    //     .attr("x2", x(lg.ptB.x))
+	    //     .attr("y2", y(lg.ptB.y));
+
+      // // Create format for equation
+      // var decimalFormat = d3.format("0.2f");
+      //
+      // var xLabels = d3.extent(data, function(person) { return person.style1; })
+      //
+      // var xSeries = d3.range(1, xLabels.length + 1);;
+      // var ySeries = data.map(function(person) { return person.style2 });
+      //
+      // var leastSquaresCoeff = leastSquares(xSeries, ySeries);
+      //
+      // var x1 = xLabels[0];
+		  // var y1 = leastSquaresCoeff[0] + leastSquaresCoeff[1];
+		  // var x2 = xLabels[xLabels.length - 1];
+		  // var y2 = leastSquaresCoeff[0] * xSeries.length + leastSquaresCoeff[1];
+		  // var trendData = [[x1,y1,x2,y2]];
+      //
+      // var trendline = svg2.selectAll(".trendline")
+			// .data(trendData);
+      //
+  		// trendline.enter()
+  		// 	.append("line")
+  		// 	.attr("class", "trendline")
+  		// 	.attr("x1", function(d) { return x(d[0]); })
+  		// 	.attr("y1", function(d) { return y(d[1]); })
+  		// 	.attr("x2", function(d) { return x(d[2]); })
+  		// 	.attr("y2", function(d) { return y(d[3]); })
+  		// 	.attr("stroke", "black")
+  		// 	.attr("stroke-width", 1);
+      //
+  		// // display equation on the chart
+  		// svg2.append("text")
+  		// 	.text("eq: " + decimalFormat(leastSquaresCoeff[0]) + "x + " +
+  		// 		decimalFormat(leastSquaresCoeff[1]))
+  		// 	.attr("class", "text-label")
+  		// 	.attr("x", function(d) {return x(x2) - 60;})
+  		// 	.attr("y", function(d) {return y(y2) - 30;});
+      //
+  		// // display r-square on the chart
+  		// svg2.append("text")
+  		// 	.text("r-sq: " + decimalFormat(leastSquaresCoeff[2]))
+  		// 	.attr("class", "text-label")
+  		// 	.attr("x", function(d) {return x(x2) - 60;})
+  		// 	.attr("y", function(d) {return y(y2) - 10;});
 
     if ($('#bargraph').is(":visible")) {
       $('#scattergraph').hide();
@@ -442,6 +507,103 @@ function responsivefy(svg) {
         svg.attr("height", Math.round(targetWidth / aspect));
     }
 }
+
+// returns slope, intercept and r-square of the line
+function leastSquares(xSeries, ySeries) {
+	var reduceSumFunc = function(prev, cur) { return prev + cur; };
+
+	var xBar = xSeries.reduce(reduceSumFunc) * 1.0 / xSeries.length;
+	var yBar = ySeries.reduce(reduceSumFunc) * 1.0 / ySeries.length;
+
+	var ssXX = xSeries.map(function(d) { return Math.pow(d - xBar, 2); })
+		.reduce(reduceSumFunc);
+
+	var ssYY = ySeries.map(function(d) { return Math.pow(d - yBar, 2); })
+		.reduce(reduceSumFunc);
+
+	var ssXY = xSeries.map(function(d, i) { return (d - xBar) * (ySeries[i] - yBar); })
+		.reduce(reduceSumFunc);
+
+	var slope = ssXY / ssXX;
+	var intercept = yBar - (xBar * slope);
+	var rSquare = Math.pow(ssXY, 2) / (ssXX * ssYY);
+
+	return [slope, intercept, rSquare];
+}
+
+function calcLinear(data, x, y, minX, minY){
+   /////////
+   //SLOPE//
+   /////////
+
+   // Let n = the number of data points
+   var n = data.length;
+
+   // Get just the points
+   var pts = [];
+   data.forEach(function(d,i){
+     var obj = {};
+     obj.x = d[x];
+     obj.y = d[y];
+     obj.mult = obj.x*obj.y;
+     pts.push(obj);
+   });
+
+   // Let a equal n times the summation of all x-values multiplied by their corresponding y-values
+   // Let b equal the sum of all x-values times the sum of all y-values
+   // Let c equal n times the sum of all squared x-values
+   // Let d equal the squared sum of all x-values
+   var sum = 0;
+   var xSum = 0;
+   var ySum = 0;
+   var sumSq = 0;
+   pts.forEach(function(pt){
+     sum = sum + pt.mult;
+     xSum = xSum + pt.x;
+     ySum = ySum + pt.y;
+     sumSq = sumSq + (pt.x * pt.x);
+   });
+   var a = sum * n;
+   var b = xSum * ySum;
+   var c = sumSq * n;
+   var d = xSum * xSum;
+
+   // Plug the values that you calculated for a, b, c, and d into the following equation to calculate the slope
+   // slope = m = (a - b) / (c - d)
+   var m = (a - b) / (c - d);
+
+   /////////////
+   //INTERCEPT//
+   /////////////
+
+   // Let e equal the sum of all y-values
+   var e = ySum;
+
+   // Let f equal the slope times the sum of all x-values
+   var f = m * xSum;
+
+   // Plug the values you have calculated for e and f into the following equation for the y-intercept
+   // y-intercept = b = (e - f) / n
+   var b = (e - f) / n;
+
+   // Print the equation below the chart
+   // document.getElementsByClassName("equation")[0].innerHTML = "y = " + m + "x + " + b;
+   // document.getElementsByClassName("equation")[1].innerHTML = "x = ( y - " + b + " ) / " + m;
+
+   // return an object of two points
+   // each point is an object with an x and y coordinate
+   return {
+     ptA : {
+       x: minX,
+       y: m * minX + b
+     },
+     ptB : {
+       y: minY,
+       x: (minY - b) / m
+     }
+   }
+
+ }
 
 // BROKEN FUNCTION: returns html elements instead of strings because of god knows why
 // function getStyles() {
