@@ -9,16 +9,34 @@ K_MEDIODS_ITERATIONS = 100
 APPROX_CLUSTER_SIZE = 4
 
 
-#List of previous data tuples with team scores array and outgoing score
-TEAMS_DATA = [([[1,1,1,1],[2,2,2,2],[3,3,3,3],[4,4,4,4]], 8),([[4,4,4,4],[3,3,3,3],[2,2,2,2],[1,1,1,1]], 8),([[-1,-1,-1,-1],[-2,-2,-2,-2],[-3,-3,-3,-3],[-4,-4,-4,-4]], 3),([[-4,-4,-4,-4],[-3,-3,-3,-3],[-2,-2,-2,-2],[-1,-1,-1,-1]], 3)]
+def generatePerson():
+	C = []
+	C.append(np.random.choice(180))
+	C.append(np.random.choice(180 - C[0]))
+	C.append(np.random.choice(180 - C[0] - C[1]))
+	C.append(180 - C[0] - C[1] - C[2])
+	np.random.shuffle(C)
+	return C
 
-def flatten(L):
-	newL = []
-	for i in range(len(L)):
-		if type(L[i]) == list:
-			newL.extend(flatten(L[i]))
-		else: newL.append(L[i])
-	return newL
+def generateTeam():
+	P = []
+	P.append(generatePerson())
+	P.append(generatePerson())
+	P.append(generatePerson())
+	P.append(generatePerson())
+	score = np.random.choice(10)
+	return (P, score)
+
+def generateSet(size):
+	S = []
+	for i in range(size):
+		S.append(generateTeam())
+	return S
+
+#List of previous data tuples with team scores array and outgoing score
+TEAMS_DATA = generateSet(20)
+
+
 
 def euclideanDistance(v1, v2):
 	'''calculates the classic euclidean distance between two vectors'''
