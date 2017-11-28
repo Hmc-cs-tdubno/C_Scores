@@ -10,7 +10,7 @@
     <%end%>
 
     <div class="row">
-        <div id="graphdiv" class="col-sm-10 col-md-7">
+        <div id="graphdiv" class="col-sm-11 col-md-8">
             <h2>Results</h2>
               <!--Three possible elements, only one visible at a time-->
               <svg id ="bargraph" class="graph" width="960" height="500"></svg>
@@ -73,9 +73,9 @@
         </div>
 
         <!-- Legend -->
-        <div class="col-sm-2 col-md-5 sidebar legend">
+        <div class="col-sm-1 col-md-4 sidebar legend">
+            <h3>Legend</h3>
             <div class="scatterlegend ml-2 container">
-                <h3>Legend</h3>
                 <p>X axis:</p>
                 <select id="style1">
                   <option>Collaborator</option>
@@ -90,13 +90,20 @@
                   <option>Challenger</option>
                   <option>Communicator</option>
                 </select>
-                <button id="newscatter" class="btn btn-primary">Go!</button>
+
             </div>
             <div class="barlegend ml-2 container">
-              <h3>Legend</h3>
-              <%= select_tag 'current-datasets', options_for_select(@dataset_ids), {:multiple => true}%>
-              <button id='dataset-button'>Update Graph</button>
+              <!-- <%= select_tag 'current-datasets', options_for_select(@dataset_ids), {:multiple => true}%> -->
+              <% @dataset_ids.each do |dataset| %>
+                <%= label_tag dataset %>
+                <%= check_box_tag 'datasets[]', dataset, false, {class: 'datasets'} %>
+                <br>
+              <% end %>
             </div>
+            <div class="ml-4">
+              <button id="dataset-button" class="btn btn-primary">Go!</button>
+            </div>
+
         </div>
 
     </div>
@@ -121,7 +128,7 @@ $(document).ready(function () {
 
     // Draw the graphs
     drawBarGraph();
-    drawScatterGraph("Collaborator", "Contributor");
+    drawScatterGraph();
     $("#scattergraph").hide();
 
 
@@ -158,11 +165,12 @@ $(document).ready(function () {
 
     // Change scatter graph axes
     $("#newscatter").click(function () {
-      drawScatterGraph($("#style1").val(), $("#style2").val());
+      drawScatterGraph();
     })
 
     $("#dataset-button").click(function () {
       updateBarGraph()
+      drawScatterGraph()
     })
 });
 </script>

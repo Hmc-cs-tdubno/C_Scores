@@ -1,6 +1,4 @@
-import random
 import numpy as np
-import itertools
 import sys
 """This file is not well tested at this time, good chance it has bugs"""
 
