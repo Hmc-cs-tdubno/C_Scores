@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get 'predictions/index'
+  post 'predictions/analyze'
 
   devise_for :users
     resources :uploads do
@@ -12,7 +13,9 @@ Rails.application.routes.draw do
   get 'uploads/new'
 
   get 'uploads/create'
-  
+
+  get 'check_dataset_id' => 'uploads#check_dataset_id'
+
   get 'api/bar/' =>'graphing#bar'
   get 'api/scatter/' =>'graphing#scatter'
   get 'delete' => 'uploads#remove'

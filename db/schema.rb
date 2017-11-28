@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171106021325) do
+ActiveRecord::Schema.define(version: 20171120021748) do
 
   create_table "people", force: :cascade do |t|
     t.integer "challenger"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20171106021325) do
     t.integer "user_id"
     t.string "q16"
     t.string "style"
+    t.string "dataset_id"
     t.index ["user_id"], name: "index_people_on_user_id"
   end
 

@@ -29,7 +29,7 @@ gem 'jbuilder', '~> 2.5'
 # gem 'redis', '~> 3.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
-
+gem 'rubypython'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
@@ -39,7 +39,11 @@ group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   # Adds support for Capybara system testing and selenium driver
   gem 'capybara', '~> 2.13'
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', '= 2.53.4'
+  gem 'rspec-rails', '~> 3.6'
+  gem 'database_cleaner'
+  gem 'rails-controller-testing'
+  gem 'factory_bot_rails'
 end
 
 group :development do
@@ -66,6 +70,9 @@ gem 'bootstrap', '= 4.0.0.alpha6'
 gem 'sprockets-rails', :require => 'sprockets/railtie'
 gem 'popper_js'
 
+# D3 Gems
+gem 'd3_rails'
 
 # Devise
 gem 'devise'
+
