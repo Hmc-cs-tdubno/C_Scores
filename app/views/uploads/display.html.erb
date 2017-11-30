@@ -16,7 +16,7 @@
               <svg id ="bargraph" class="graph" width="960" height="500"></svg>
               <svg id="scattergraph" class="graph" width="960" height="500"></svg>
               <!--Table holding stats (calculated by uploads_controller)-->
-              <table id="stats" class="table table-hover">
+              <table id="stats" class="table table-hover" style="display: block; width: 25%">
                 <tr>
                     <th scope="row"><strong>Most similarly answered question:</strong></th>
                     <td><%=@most_com[0][1..-1]%></td>
@@ -42,7 +42,7 @@
                     <td><%=@most_com_communicator[0][1..-1]%></td>
                 </tr>
                 <tr>
-                    <th scope="row"><strong>Most common secondary style:</strong>
+                    <th scope="row"><strong>Most common secondary style:</strong></th>
                 </tr>
                 <tr>
                     <td></td>
@@ -69,38 +69,74 @@
                     <td><%=@substyle_communicator[0]%></td>
                 </tr>
             </table>
-
+            <!-- <ul>
+              <li><strong>Most similarly answered question:</strong> <%=@most_com[0][1..-1]%></li>
+              <ul>
+                <li><strong>Among challengers:</strong> <%=@most_com_challenger[0][1..-1]%></li>
+                <li><strong>Among contributors:</strong> <%=@most_com_contributor[0][1..-1]%></li>
+                <li><strong>Among collaborators:</strong> <%=@most_com_collaborator[0][1..-1]%></li>
+                <li><strong>Among communicators:</strong> <%=@most_com_communicator[0][1..-1]%></li>
+              </ul>
+              <li><strong>Most common secondary style:</strong></li>
+              <ul>
+                <li><strong>For challengers:</strong> <%=@substyle_challenger[0]%></li>
+                <li><strong>For contributors:</strong> <%=@substyle_contributor[0]%></li>
+                <li><strong>For collaborators:</strong> <%=@substyle_collaborator[0]%></li>
+                <li><strong>For communicators:</strong> <%=@substyle_communicator[0]%></li>
+              </ul>
+            </ul> -->
         </div>
 
         <!-- Legend -->
         <div class="col-sm-1 col-md-4 sidebar legend">
-            <h3>Legend</h3>
+            <h3 class="mb-3">Legend</h3>
+            <!-- Scatter Plot Legend -->
             <div class="scatterlegend ml-2 container">
-                <p>X axis:</p>
-                <select id="style1">
-                  <option>Collaborator</option>
-                  <option selected="selected">Contributor</option>
-                  <option>Challenger</option>
-                  <option>Communicator</option>
-                </select>
-                <p>Y axis:</p>
-                <select id="style2">
-                  <option>Collaborator</option>
-                  <option>Contributor</option>
-                  <option>Challenger</option>
-                  <option>Communicator</option>
-                </select>
-
+                <table class="table">
+                  <tr>
+                    <th>X axis:</th>
+                    <th>Y axis:</th>
+                  </tr>
+                  <tr>
+                    <td>
+                      <select id="style1" class="form-control">
+                        <option>Collaborator</option>
+                        <option selected="selected">Contributor</option>
+                        <option>Challenger</option>
+                        <option>Communicator</option>
+                      </select>
+                    </td>
+                    <td>
+                      <select id="style2" class="form-control">
+                        <option>Collaborator</option>
+                        <option>Contributor</option>
+                        <option>Challenger</option>
+                        <option>Communicator</option>
+                      </select>
+                    </td>
+                  </tr>
+                </table>
             </div>
+            <!-- Bar Graph Legend -->
             <div class="barlegend ml-2 container">
               <!-- <%= select_tag 'current-datasets', options_for_select(@dataset_ids), {:multiple => true}%> -->
-              <% @dataset_ids.each do |dataset| %>
-                <%= label_tag dataset %>
-                <%= check_box_tag 'datasets[]', dataset, false, {class: 'datasets'} %>
-                <br>
-              <% end %>
+              <table style="table-layout: fixed;">
+                <tr style="border-bottom: 1px solid">
+                  <th>Datasets</th>
+                </tr>
+                <tbody style="display: block; width: 100%; height: 100px; overflow-y: scroll;">
+                  <% @dataset_ids.each do |dataset| %>
+                  <tr>
+                    <td style="max-wdith: 50%; word-break:break-all;"><%= label_tag dataset %></td>
+                    <td><%= check_box_tag 'datasets[]', dataset, false, {class: 'datasets'} %></td>
+                  </tr>
+                  <% end %>
+                </tbody>
+              </table>
             </div>
-            <div class="ml-4">
+
+            <!-- Button to update data -->
+            <div class="ml-4 mt-3">
               <button id="dataset-button" class="btn btn-primary">Go!</button>
             </div>
 
@@ -110,8 +146,9 @@
 
     <hr class="hline">
 
+    <!-- Buttons for adding new data sets -->
     <div class="ml-2 row btn-group-vertical">
-        <a href="/"><button type="submit" class="btn btn-primary mx-auto">Upload </button></a>
+      <a href="/"><button type="submit" class="btn btn-primary mx-auto">Upload </button></a>
       <a href="/delete"><button type="submit" class="btn btn-warning mx-auto">Delete Data</button></a>
     </div>
 
@@ -161,12 +198,6 @@ $(document).ready(function () {
         statbutton();
         document.cookie = "hello = 3";
     });
-
-
-    // Change scatter graph axes
-    $("#newscatter").click(function () {
-      drawScatterGraph();
-    })
 
     $("#dataset-button").click(function () {
       updateBarGraph()
