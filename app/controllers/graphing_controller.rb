@@ -1,75 +1,31 @@
 class GraphingController < ApplicationController
   include GraphingHelper
 
-  def new
-  end
-
   def scatter
     style1 = params[:style1]
     style2 = params[:style2]
 
     # Grab the uploaded data for the current user
-    @people = []
+    @people = get_data_by_params(current_user, params)
 
-    #TODO: MAKE THIS A FUNCTION
-    # If the user wishes to filter dataset from graph run the following
-    if !(params.keys.include? "include0")
-      current_user.people.find_each do |person|
-        @people.push person
-      end
-    else
-      # Grab data from each dataset in :include and add it to people
-      params.each do |key, dataset|
-        puts key
-        if key.include? "include"
-          current_user.people.where({dataset_id: dataset}).find_each do |person|
-            @people.push person
-          end
-        end
-      end
-    end
-
-    #TODO make this better
-    puts @people.length
     data = []
+
+    # Create data points for scatter plot
+    # Note that style1 is the x and style 2 is the y
     @people.each do |person|
-      puts "STYLE1"
-      puts style1
-      puts person[style1]
-      puts "STYLE2"
-      puts person[style2]
       data+=[
         {:style1 => person[style1],
         :style2 => person[style2]}
       ]
     end
 
-    puts data
     render json: {status: 'SUCCESS', message: 'Loaded all posts', data: data}, status: :ok
   end
 
+
   def bar
-    @people = []
-
-    # If the user wishes to filter dataset from graph run the following
-    if !(params.keys.include? "include0")
-      current_user.people.find_each do |person|
-        @people.push person
-      end
-    else
-      # Grab data from each dataset in :include and add it to people
-      params.each do |key, dataset|
-        puts key
-        if key.include? "include"
-          current_user.people.where({dataset_id: dataset}).find_each do |person|
-            @people.push person
-          end
-        end
-      end
-    end
-
-    puts @people.length
-
+    # Grab the uploaded data for the current user
+    @people = get_data_by_params(current_user, params)
 
     frequencies = {
       :challenger => 0,
@@ -77,7 +33,6 @@ class GraphingController < ApplicationController
       :communicator => 0,
       :collaborator => 0
     }
-
 
     # Update frequencies
     @people.each do |person|

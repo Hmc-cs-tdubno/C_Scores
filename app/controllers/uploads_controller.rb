@@ -3,7 +3,7 @@ class UploadsController < ApplicationController
   include UsersHelper
 
   def index
-    @people = Person.where("user_id = ?", current_user.id)
+    @people = current_user.people
   end
 
   def new
@@ -18,7 +18,7 @@ class UploadsController < ApplicationController
   end
 
   def display
-    @people = Person.where("user_id = ?", current_user.id)
+    @people = current_user.people
 
     #Makes calls to users_helper to get statistics and make them available in uploads/display
     @most_com = common_answer(@people)
