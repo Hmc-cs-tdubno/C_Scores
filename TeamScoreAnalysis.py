@@ -24,7 +24,9 @@ def generateTeam():
 	P.append(generatePerson())
 	P.append(generatePerson())
 	P.append(generatePerson())
-	score = np.random.choice(10)
+	score = []
+	for i in range(10):
+		score.append(np.random.choice(7))
 	return (P, score)
 
 def generateSet(size):
@@ -174,6 +176,10 @@ Description: This function should be run once (at server start?). It uses past d
 			(currently hardcoded into this file) in the form of a list of team, score
 			tuples to calculate means and assign them scores. This is with the help of
 			the kMedoids function above to generate medoids.
+NOTE:		The scores given in seed data and assigned to clusters are a collection of scores
+			recieved on the 10 question of the Team Success Survey currently in use. However, 
+			this can be easily changed by making changes to the number of scores given in seed
+			data, along with appropriate changes to the prediction veiws.
 Output:      A dictionary whose keys are the 'medoids' of kMedoids (as tuples of lists, so 
 			that they are hashable) and whose values are the outgoing score 
 			(float) associated with that medoid. This should be stored somehow in 
@@ -201,17 +207,18 @@ def preAnalyze(seed = TEAMS_DATA):
 		#initialize teamsinmeans dictionary entries to 0
 		teamsInMeds[medI] = 0
 		#populatet ScoreDict with entries to fill in the score of each mean
-		medScores[medI] = 0
+		medScores[medI] = [0 for x in range(len(seed[0][1]))]
 
 		for team_indx in Clusters[medI]:
 			#Add 1 to the number of teams in the cluster of the current team
 			teamsInMeds[medI] += 1
-			#Add the score is the score of the current team
-			score = seed[team_indx][1]
-			#add this score to the score for the current team's mean
-			medScores[medI] += score
+			#add scores to the cluster's aggregate
+			for i in range(len(seed[team_indx][1])):
+				medScores[medI][i]+=(seed[team_indx][1][i])
 		#get the AVERAGE score for teams in a cluster, and add the med vector ot the value
-		medScores[medI] = (vectors[medI], medScores[medI]/teamsInMeds[medI])
+		for i in range(len(seed[team_indx])-1):
+				medScores[medI][i] = medScores[medI][i]/teamsInMeds[medI]
+				medScores[medI] = (vectors[medI], medScores[medI])
 	return medScores
 
 
@@ -243,6 +250,7 @@ def analyze(newTeam, medScores):
 	#return the score associated with that mean
 	return medScores[medI][1]
 	
+#Below is machinery for alowing us to call the functions in this file from the app
 def main(argv):
 	x = preAnalyze();
 	import ast
