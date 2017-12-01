@@ -1,8 +1,11 @@
 class PredictionsController < ApplicationController
   require "rubypython"
+
+
   def index
   end
 
+  # Runs prediction script and responds with result
   def analyze
     members = []
     styles = ['Collaborator','Comunicator','Contributor','Challenger']
@@ -10,14 +13,12 @@ class PredictionsController < ApplicationController
       bla=[]
       styles.each do |sty|
         bla+=[params[sty+k.to_s+':']]
-      end 
+      end
       members+=[bla]
-    end 
+    end
     #             |
     # system call V
     results = `python TeamScoreAnalysis.py #{members}`
-    puts results
-    puts "welcome"
     # puts x
     results= results[0..3]
     render json: {status: 'SUCCESS', message: 'Loaded all posts', data: results.to_f}, status: :ok

@@ -48,6 +48,9 @@ var margin = {top: 20, right: 70, bottom: 70, left: 40},
           .orient("left")
           .tickFormat(barYAxisFormat())
 
+      // If there are less than 10 datapoints for
+      // a style use less than 10 ticks
+      // otherwise use 10 ticks
       if (maxfreq < 10) {
         yAxis = yAxis.ticks(maxfreq)
       }
