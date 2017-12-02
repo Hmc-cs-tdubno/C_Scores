@@ -1,5 +1,6 @@
 import numpy as np
 import sys
+import csv
 """This file is not well tested at this time, good chance it has bugs"""
 
 #Max number of iterations in the K-medoids algorithm
@@ -8,35 +9,26 @@ K_MEDIODS_ITERATIONS = 100
 #About how many teams will be in each cluster. Used to calculate the k of k-means
 APPROX_CLUSTER_SIZE = 4
 
+#The filename for the CSV file (stored in the C_Scores directory) with seed data (each row a team, with
+#with 16 PTPS scores followed by some number (currently 10) outgoing survey scores)
+SEED_DATA_FILE = 'seedData.csv'
 
-def generatePerson():
-	C = []
-	C.append(np.random.choice(180))
-	C.append(np.random.choice(180 - C[0]))
-	C.append(np.random.choice(180 - C[0] - C[1]))
-	C.append(180 - C[0] - C[1] - C[2])
-	np.random.shuffle(C)
-	return C
 
-def generateTeam():
-	P = []
-	P.append(generatePerson())
-	P.append(generatePerson())
-	P.append(generatePerson())
-	P.append(generatePerson())
-	score = []
-	for i in range(10):
-		score.append(np.random.choice(7))
-	return (P, score)
+def readSeed(seedFile = SEED_DATA_FILE):
+	with open(seedFile, 'r') as file:
+		seed = []
+		seedReader = csv.reader(file, delimiter=',', quotechar='|')
+		for row in seedReader:
+			row = list(map(lambda x: int(x), row))
+			PTPSScores = [row[:4], row[4:8], row[8:12], row[12:16]]
+			successScores = row[16:-1]
+			team = [PTPSScores, successScores]
+			seed.append(team)
+	return seed
 
-def generateSet(size):
-	S = []
-	for i in range(size):
-		S.append(generateTeam())
-	return S
 
 #List of previous data tuples with team scores array and outgoing score
-TEAMS_DATA = generateSet(20)
+TEAMS_DATA = readSeed(SEED_DATA_FILE)
 
 
 

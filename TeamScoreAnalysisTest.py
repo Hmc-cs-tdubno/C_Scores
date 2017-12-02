@@ -28,9 +28,12 @@ def generateSet(size):
 		S.append(generateTeam())
 	return S
 
-def preAnalTest(size):
-	seed = generateSet(size)
-	medScores = preAnalyze(seed)
+#Note: When called without a size argument, preAnalTest uses the seeded data stored in seedData.csv
+def preAnalTest(size = 0):
+	if size != 0:
+		seed = generateSet(size)
+		medScores = preAnalyze(seed)
+	else: medScores = preAnalyze()
 	return medScores
 
 def analTest(medScores):
