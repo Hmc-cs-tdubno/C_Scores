@@ -208,9 +208,9 @@ def preAnalyze(seed = TEAMS_DATA):
 			for i in range(len(seed[team_indx][1])):
 				medScores[medI][i]+=(seed[team_indx][1][i])
 		#get the AVERAGE score for teams in a cluster, and add the med vector ot the value
-		for i in range(len(seed[team_indx])-1):
-				medScores[medI][i] = medScores[medI][i]/teamsInMeds[medI]
-				medScores[medI] = (vectors[medI], medScores[medI])
+		medScores[medI] = list(map(lambda x:x/teamsInMeds[medI], medScores[medI]))
+		#Add the med vector to the information stored in the list
+		medScores[medI] = (vectors[medI], medScores[medI])
 	return medScores
 
 
