@@ -1,16 +1,34 @@
 class UploadsController < ApplicationController
   before_action :authenticate_user!
   include UsersHelper
+  include GraphingHelper
 
   def index
-    @people = Person.where("user_id = ?", current_user.id)
+    @people = current_user.people
   end
 
   def new
   end
 
+  def delete_individuals
+    puts "WHY DOESN'T IT WORK"
+    begin
+      params.each do |key, dataset|
+        message = "Successfully deleted datasets"
+        if key.include? "include"
+          puts current_user.people.where({dataset_id: dataset})
+          current_user.people.where({dataset_id: dataset}).delete_all
+        end
+      end
+    rescue
+      message = "Unable to delete datasets"
+    end
+
+    render json: {status: 'SUCCESS', message: 'Loaded all posts', message: message}, status: :ok
+  end
+
   def remove
-    Person.where("user_id = ?", current_user.id).destroy_all
+    current_user.people.destroy_all
     redirect_to("/")
   end
 
@@ -18,7 +36,7 @@ class UploadsController < ApplicationController
   end
 
   def display
-    @people = Person.where("user_id = ?", current_user.id)
+    @people = current_user.people
 
     #Makes calls to users_helper to get statistics and make them available in uploads/display
     @most_com = common_answer(@people)
@@ -31,12 +49,12 @@ class UploadsController < ApplicationController
     @substyle_collaborator = common_substyle(@people, "collaborator")
     @substyle_communicator = common_substyle(@people, "communicator")
 
-    @dataset_ids = Person.where("user_id = ?", current_user.id).distinct.pluck(:dataset_id)
+    @dataset_ids = current_user.people.distinct.pluck(:dataset_id)
   end
 
   def import
     #Try to upload data to DB, catch response
-    possible_dataset = Person.where("user_id = ?", current_user.id).where("dataset_id = ?", params[:dataset_id])
+    possible_dataset = current_user.people.where("dataset_id = ?", params[:dataset_id])
     if params[:file] && possible_dataset.empty?
       response = Person.import(params[:file], params[:dataset_id], current_user.id)
 
@@ -55,10 +73,11 @@ class UploadsController < ApplicationController
     end
   end
 
+# Checks data for
   def check_dataset_id
     if params[:dataset_id] != ''
-
-      possible_dataset = Person.where("user_id = ?", current_user.id).where("dataset_id = ?", params[:dataset_id])
+      puts params[:dataset_id]
+      possible_dataset = current_user.people.where("dataset_id = ?", params[:dataset_id])
 
       if possible_dataset.empty?
         render json: {status: 'SUCCESS', message: 'Ok name'}, status: :ok

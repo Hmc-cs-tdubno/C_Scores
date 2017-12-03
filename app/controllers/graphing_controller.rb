@@ -15,7 +15,8 @@ class GraphingController < ApplicationController
     @people.each do |person|
       data+=[
         {:style1 => person[style1],
-        :style2 => person[style2]}
+        :style2 => person[style2],
+        :dataset => person[:dataset_id]}
       ]
     end
 
