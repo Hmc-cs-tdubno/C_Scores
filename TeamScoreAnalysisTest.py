@@ -17,7 +17,9 @@ def generateTeam():
 	P.append(generatePerson())
 	P.append(generatePerson())
 	P.append(generatePerson())
-	score = np.random.choice(10)
+	score = []
+	for i in range(10):
+		score.append(np.random.choice(7))
 	return (P, score)
 
 def generateSet(size):
@@ -26,15 +28,15 @@ def generateSet(size):
 		S.append(generateTeam())
 	return S
 
-def preAnalTest(size):
-	seed = generateSet(size)
-	medScores = preAnalyze(seed)
-	print(medScores)
+#Note: When called without a size argument, preAnalTest uses the seeded data stored in seedData.csv
+def preAnalTest(size = 0):
+	if size != 0:
+		seed = generateSet(size)
+		medScores = preAnalyze(seed)
+	else: medScores = preAnalyze()
 	return medScores
 
 def analTest(medScores):
 	newTeam = generateTeam()[0]
 	score = analyze(newTeam, medScores)
-	print(newTeam)
-	print(score)
 	return score

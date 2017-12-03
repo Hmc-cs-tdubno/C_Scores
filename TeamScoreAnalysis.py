@@ -1,5 +1,6 @@
 import numpy as np
 import sys
+import csv
 """This file is not well tested at this time, good chance it has bugs"""
 
 #Max number of iterations in the K-medoids algorithm
@@ -8,33 +9,26 @@ K_MEDIODS_ITERATIONS = 100
 #About how many teams will be in each cluster. Used to calculate the k of k-means
 APPROX_CLUSTER_SIZE = 4
 
+#The filename for the CSV file (stored in the C_Scores directory) with seed data (each row a team, with
+#with 16 PTPS scores followed by some number (currently 10) outgoing survey scores)
+SEED_DATA_FILE = 'seedData.csv'
 
-def generatePerson():
-	C = []
-	C.append(np.random.choice(180))
-	C.append(np.random.choice(180 - C[0]))
-	C.append(np.random.choice(180 - C[0] - C[1]))
-	C.append(180 - C[0] - C[1] - C[2])
-	np.random.shuffle(C)
-	return C
 
-def generateTeam():
-	P = []
-	P.append(generatePerson())
-	P.append(generatePerson())
-	P.append(generatePerson())
-	P.append(generatePerson())
-	score = np.random.choice(10)
-	return (P, score)
+def readSeed(seedFile = SEED_DATA_FILE):
+	with open(seedFile, 'r') as file:
+		seed = []
+		seedReader = csv.reader(file, delimiter=',', quotechar='|')
+		for row in seedReader:
+			row = list(map(lambda x: int(x), row))
+			PTPSScores = [row[:4], row[4:8], row[8:12], row[12:16]]
+			successScores = row[16:-1]
+			team = [PTPSScores, successScores]
+			seed.append(team)
+	return seed
 
-def generateSet(size):
-	S = []
-	for i in range(size):
-		S.append(generateTeam())
-	return S
 
 #List of previous data tuples with team scores array and outgoing score
-TEAMS_DATA = generateSet(20)
+TEAMS_DATA = readSeed(SEED_DATA_FILE)
 
 
 
@@ -174,6 +168,10 @@ Description: This function should be run once (at server start?). It uses past d
 			(currently hardcoded into this file) in the form of a list of team, score
 			tuples to calculate means and assign them scores. This is with the help of
 			the kMedoids function above to generate medoids.
+NOTE:		The scores given in seed data and assigned to clusters are a collection of scores
+			recieved on the 10 question of the Team Success Survey currently in use. However, 
+			this can be easily changed by making changes to the number of scores given in seed
+			data, along with appropriate changes to the prediction veiws.
 Output:      A dictionary whose keys are the 'medoids' of kMedoids (as tuples of lists, so 
 			that they are hashable) and whose values are the outgoing score 
 			(float) associated with that medoid. This should be stored somehow in 
@@ -201,17 +199,18 @@ def preAnalyze(seed = TEAMS_DATA):
 		#initialize teamsinmeans dictionary entries to 0
 		teamsInMeds[medI] = 0
 		#populatet ScoreDict with entries to fill in the score of each mean
-		medScores[medI] = 0
+		medScores[medI] = [0 for x in range(len(seed[0][1]))]
 
 		for team_indx in Clusters[medI]:
 			#Add 1 to the number of teams in the cluster of the current team
 			teamsInMeds[medI] += 1
-			#Add the score is the score of the current team
-			score = seed[team_indx][1]
-			#add this score to the score for the current team's mean
-			medScores[medI] += score
+			#add scores to the cluster's aggregate
+			for i in range(len(seed[team_indx][1])):
+				medScores[medI][i]+=(seed[team_indx][1][i])
 		#get the AVERAGE score for teams in a cluster, and add the med vector ot the value
-		medScores[medI] = (vectors[medI], medScores[medI]/teamsInMeds[medI])
+		medScores[medI] = list(map(lambda x:x/teamsInMeds[medI], medScores[medI]))
+		#Add the med vector to the information stored in the list
+		medScores[medI] = (vectors[medI], medScores[medI])
 	return medScores
 
 
@@ -243,6 +242,7 @@ def analyze(newTeam, medScores):
 	#return the score associated with that mean
 	return medScores[medI][1]
 	
+#Below is machinery for alowing us to call the functions in this file from the app
 def main(argv):
 	x = preAnalyze();
 	import ast
