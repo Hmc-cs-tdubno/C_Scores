@@ -21,7 +21,7 @@ def readSeed(seedFile = SEED_DATA_FILE):
 		for row in seedReader:
 			row = list(map(lambda x: int(x), row))
 			PTPSScores = [row[:4], row[4:8], row[8:12], row[12:16]]
-			successScores = row[16:-1]
+			successScores = row[16:]
 			team = [PTPSScores, successScores]
 			seed.append(team)
 	return seed
@@ -218,9 +218,10 @@ def preAnalyze(seed = TEAMS_DATA):
 Description: This function should be called when the user asks for a new prediction.
 			It classifies a hypothetical team based on stored past data, and returns the 
 			outgoing score associated with that classification.
-Output:     An float value describing the predicted success of input team.
+Output:     An list of float values describing the predicted success of input team, one value for each qeustion
+			on the current iteration of the team success survey.
 
-Paraeters:
+Parameters:
 	newTeam - a 16-vector (currently expected as a list of 4 lists length 4, each
 				representing the scores of a particualr team member) selected by the user
 	medScores - a python dictionary computed earlier (possibly server start?) whose keys 
