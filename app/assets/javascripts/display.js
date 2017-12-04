@@ -18,6 +18,7 @@ var margin = {top: 20, right: 70, bottom: 70, left: 40},
     // Set the scales for the axes
     var x = d3.scale.ordinal().rangeRoundBands([padding, width-padding], .05);
     var y = d3.scale.linear().range([height-padding, padding]);
+    var colorScale = d3.scale.category20()
 
     d3.json("http://localhost:3000/api/bar",function(data){
       // Keep track of largest frequency for setting axis ticks
@@ -36,6 +37,7 @@ var margin = {top: 20, right: 70, bottom: 70, left: 40},
       // scale the range of the data
       x.domain(data.map(function(d) { return d.style; }));
       y.domain([0, d3.max(data, function(d) { return d.freq; })]);
+      colorScale.domain(data.map(function (d) { return d.style; }));
 
       // Create new axis object
       var xAxis = d3.svg.axis()
@@ -85,9 +87,10 @@ var margin = {top: 20, right: 70, bottom: 70, left: 40},
         .enter().append("rect")
           .attr("class", "bar")
           .attr("x", function(d) { return x(d.style); })
-          .attr("width", x.rangeBand())
           .attr("y", function(d) { return y(d.freq); })
-          .attr("height", function(d) { return (height-padding) - y(d.freq); });
+          .attr("width", x.rangeBand())
+          .attr("height", function(d) { return (height-padding) - y(d.freq); })
+          .attr("fill", function (d) { return colorScale(d.style)});
 
     });
 }
@@ -197,13 +200,10 @@ function drawScatterGraph() {
       url = url + "?style1="+style1+"&style2="+style2
     }
 
-    var x = d3.scale.linear()
-        .range([padding, width-padding]);
-
-    var y = d3.scale.linear()
-        .range([height-padding, padding]);
-
-    var color = d3.scale.category10();
+    // Set up scales for graph
+    var x = d3.scale.linear().range([padding, width-padding]);
+    var y = d3.scale.linear().range([height-padding, padding]);
+    var color = d3.scale.category20b();
 
     var xAxis = d3.svg.axis()
         .scale(x)
@@ -214,7 +214,7 @@ function drawScatterGraph() {
         .orient("left");
 
 
-    // Add svg element to page
+    // Add graph canvas to page
     var svg = d3.select("#graphdiv").append("svg").attr("id", "scattergraph")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
@@ -222,8 +222,12 @@ function drawScatterGraph() {
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    // add the tooltip area to the webpage
+    var tooltip = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
 
-    // TODO: Throw a link to rails thing in there
+
     d3.json(url, function(error, data) {
       if (error) throw error;
       data = data.data
@@ -270,7 +274,21 @@ function drawScatterGraph() {
             return x(person.style1); })
           .attr("cy", function(person) {
             return y(person.style2); })
-          .style("fill", "black")
+          .style("fill", function(d) { return color(d.dataset)})
+          .on("mouseover", function(d) {
+              tooltip.transition()
+                   .duration(200)
+                   .style("opacity", .9);
+              tooltip.html(d.dataset + "<br/> (" + d.style1
+    	        + ", " + d.style2 + ")")
+                   .style("left", (d3.event.pageX + 5) + "px")
+                   .style("top", (d3.event.pageY - 28) + "px");
+          })
+          .on("mouseout", function(d) {
+              tooltip.transition()
+                   .duration(500)
+                   .style("opacity", 0);
+          });
 
     // Make sure the new scatter plot does not
     // appear while user is looking at bar graph
@@ -422,6 +440,26 @@ function statbutton(){
   $(".legend").hide(400);
   $("#stats").show(800);
   $(".scatterlegend").hide();
+}
+
+function deleteData() {
+  url = d3UpdateUrl("http://localhost:3000/delete_individuals?");
+  $.ajax(url, {
+    method: "GET",
+    success: function (data) {
+      if (data.message = "Successfully deleted datasets") {
+        $('.datasets').each(function (index) {
+          if ($(this).is(":checked")) {
+            $(this).parents("tr").remove()
+            drawScatterGraph();
+            updateBarGraph();
+          }
+        });
+      } else {
+        console.log("something is wrong")
+      }
+    }
+  });
 }
 
 

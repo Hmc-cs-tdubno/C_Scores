@@ -15,7 +15,8 @@ class GraphingController < ApplicationController
     @people.each do |person|
       data+=[
         {:style1 => person[style1],
-        :style2 => person[style2]}
+        :style2 => person[style2],
+        :dataset => person[:dataset_id]}
       ]
     end
 
@@ -36,6 +37,7 @@ class GraphingController < ApplicationController
 
     # Update frequencies
     @people.each do |person|
+      puts "hello: "+ person["style"]
       frequencies[person["style"].to_sym] += 1
     end
     data = []

@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get 'uploads/new'
   get 'uploads/create'
   get 'delete' => 'uploads#remove'
+  get 'delete_individuals' => 'uploads#delete_individuals'
 
   # Ajax Routes
   get 'check_dataset_id' => 'uploads#check_dataset_id'
