@@ -1,5 +1,40 @@
 <h4 class="mt-2">Predictions</h4>
-
+<div class="prediction-result mt-2 container">       
+  <table class="table table-condensed table-bordered">
+    <tbody>
+			<tr class = "tab0">
+				<td>Work distributed fairly and effectively:</td>
+			</tr>
+      <tr class = "tab1">
+        <td>Learning effectively from team:</td>
+      </tr>
+      <tr class = "tab2">
+        <td>Significant contributions from team to product:</td>
+      </tr>
+      <tr class = "tab3">
+        <td>Team has same goals for project:</td>
+      </tr>
+			<tr class = "tab4">
+				<td>Positive attitude:</td>
+			</tr>
+      <tr class = "tab5">
+        <td>Lack of interpersonal conflict:</td>
+      </tr>
+      <tr class = "tab6">
+        <td>Effective management of problems that arise:</td>
+      </tr>
+      <tr class = "tab7">
+        <td>Feelings of pride toward the product:</td>
+      </tr>
+			<tr class = "tab8">
+        <td>Respectful and effective teammate communication:</td>
+      </tr>
+      <tr class = "tab9">
+        <td>Effective management by PMs:</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 <!--This form is where users enter the scores of their hypothetical team.
 	It sends this input to the predictions controller-->
 <%= form_tag "/predictions/analyze", :id => 'predict-form' do %>
@@ -48,17 +83,18 @@
     <div><%= submit_tag 'Submit', {class: "btn btn-primary"} %></div>
 <% end -%>
 
-<div class="prediction-result mt-2">
-</div>
+
 
 
 <!--Turns on the navbar link back to insights on in this page-->
 <script type="text/javascript">
 	$(document).ready(function() {
 		$(".predictions").show();
+		$(".prediction-result").hide();
 	});
 
   $('form').submit(function () {
+      $('.predict').remove();
       var valuesToSubmit = $(this).serialize();
       $.ajax({
         type: "POST",
@@ -66,9 +102,13 @@
         data: valuesToSubmit,
         dataType: "JSON",
         success: function(json) {
-        $('.prediction-result').append("<p>" + json.data + "</p>");
-      }
-      })
+					answers = json.data
+					for (i = 0; i < answers.length; i++) { 
+    				$('.tab'+i).append("<td class =\"predict\">" + answers[i].toString()+"/5.0" + "</td>");
+					};
+					$(".prediction-result").slideDown("slow");
+			}
+		});
       return false;
   })
 </script>

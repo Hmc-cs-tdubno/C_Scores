@@ -17,8 +17,9 @@ class PredictionsController < ApplicationController
     #             |
     # system call V
     results = `python TeamScoreAnalysis.py #{members}`
-    # puts x
-    results= results[0..3]
-    render json: {status: 'SUCCESS', message: 'Loaded all posts', data: results.to_f}, status: :ok
+    puts results
+    results= results[1..-3]
+    results= results.split(",")
+    render json: {status: 'SUCCESS', message: 'Loaded all posts', data: results}, status: :ok
   end
 end

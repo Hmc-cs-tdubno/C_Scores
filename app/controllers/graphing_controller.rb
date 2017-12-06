@@ -37,6 +37,7 @@ class GraphingController < ApplicationController
 
     # Update frequencies
     @people.each do |person|
+      puts "hello: "+ person["style"]
       frequencies[person["style"].to_sym] += 1
     end
     data = []
