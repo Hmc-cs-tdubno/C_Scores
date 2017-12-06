@@ -1,6 +1,4 @@
 class PredictionsController < ApplicationController
-  require "rubypython"
-
 
   def index
   end
