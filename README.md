@@ -22,7 +22,7 @@ TODO: List which gems your project is using, and the purpose each gem serves in 
  Software and comands required to run and test project: 
  Python 3 and Pip.
  
- `git clone https://github.com/Hmc-cs-tdubno/C_Scores.git`
+ `git clone https://github.com/Hmc-cs-tdubno/C_Scores.git\n`
  `bundle install`
 ` rake db:migrate`
 ` pip install numpy`
