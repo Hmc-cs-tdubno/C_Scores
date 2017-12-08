@@ -7,7 +7,7 @@ import csv
 K_MEDIODS_ITERATIONS = 100
 
 #About how many teams will be in each cluster. Used to calculate the k of k-means
-APPROX_CLUSTER_SIZE = 4
+APPROX_CLUSTER_SIZE = 2
 
 #The filename for the CSV file (stored in the C_Scores directory) with seed data (each row a team, with
 #with 16 PTPS scores followed by some number (currently 10) outgoing survey scores)
@@ -19,7 +19,7 @@ def readSeed(seedFile = SEED_DATA_FILE):
 		seed = []
 		seedReader = csv.reader(file, delimiter=',', quotechar='|')
 		for row in seedReader:
-			row = list(map(lambda x: int(x), row))
+			row = list(map(lambda x: float(x), row))
 			PTPSScores = [row[:4], row[4:8], row[8:12], row[12:16]]
 			successScores = row[16:]
 			team = [PTPSScores, successScores]
@@ -36,7 +36,7 @@ def euclideanDistance(v1, v2):
 	'''calculates the classic euclidean distance between two vectors'''
 	dist = 0
 	for i in range(len(v1)):
-		if type(v1[i]) == int:
+		if type(v1[i]) in [float,int]:
 			dist += (v1[i] - v2[i])**2
 		else:
 			dist += (euclideanDistance(v1[i],v2[i]))**2
@@ -237,11 +237,13 @@ def analyze(newTeam, medScores):
 	dist = float("inf")
 	#find the closest mean
 	for medI in medScores:
+		print(medScores[medI][0])
+		print(distance(newTeam, medScores[medI][0]))
 		if distance(newTeam, medScores[medI][0]) < dist:
 			closeMed = medI
 			dist = distance(newTeam, medScores[medI][0])
 	#return the score associated with that mean
-	return medScores[medI][1]
+	return medScores[closeMed][1]
 	
 #Below is machinery for alowing us to call the functions in this file from the app
 def main(argv):
@@ -249,6 +251,8 @@ def main(argv):
 	import ast
 	l = ast.literal_eval(''.join(argv))
 	y = analyze(l,x)
+	#truncate the scores after the 100th place
+	y = map(lambda x: floor(x*100)/100, y)
 	print(y)
 	
 
