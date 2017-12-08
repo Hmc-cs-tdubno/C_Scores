@@ -1,5 +1,5 @@
 <h4 class="mt-2">Predictions</h4>
-<div class="prediction-result mt-2 container">       
+<div class="prediction-result mt-2 container">
   <table class="table table-condensed table-bordered">
     <tbody>
 			<tr class = "tab0">
@@ -50,34 +50,34 @@
 
     <tr>
     	<td><%=label_tag 'Team Member 1' %></td>
-    	<td><%=number_field_tag 'Collaborator1:'%></td>
-    	<td><%=number_field_tag 'Comunicator1:'%></td>
-    	<td><%=number_field_tag 'Contributor1:'%></td>
-    	<td><%=number_field_tag 'Challenger1:'%></td>
+    	<td><%=number_field_tag 'Collaborator1:', nil, :required => true %></td>
+    	<td><%=number_field_tag 'Comunicator1:', nil, :required => true %></td>
+    	<td><%=number_field_tag 'Contributor1:', nil, :required => true %></td>
+    	<td><%=number_field_tag 'Challenger1:', nil, :required => true %></td>
 	</tr>
 
 	<tr>
     	<td><%=label_tag 'Team Member 2' %></td>
-    	<td><%=number_field_tag 'Collaborator2:'%></td>
-    	<td><%=number_field_tag 'Comunicator2:'%></td>
-    	<td><%=number_field_tag 'Contributor2:'%></td>
-    	<td><%=number_field_tag 'Challenger2:'%></td>
+    	<td><%=number_field_tag 'Collaborator2:', nil, :required => true %></td>
+    	<td><%=number_field_tag 'Comunicator2:', nil, :required => true %></td>
+    	<td><%=number_field_tag 'Contributor2:', nil, :required => true %></td>
+    	<td><%=number_field_tag 'Challenger2:', nil, :required => true %></td>
 	</tr>
 
 	<tr>
     	<td><%=label_tag 'Team Member 3' %></td>
-    	<td><%=number_field_tag 'Collaborator3:'%></td>
-    	<td><%=number_field_tag 'Comunicator3:'%></td>
-    	<td><%=number_field_tag 'Contributor3:'%></td>
-    	<td><%=number_field_tag 'Challenger3:'%></td>
+    	<td><%=number_field_tag 'Collaborator3:', nil, :required => true %></td>
+    	<td><%=number_field_tag 'Comunicator3:', nil, :required => true %></td>
+    	<td><%=number_field_tag 'Contributor3:', nil, :required => true %></td>
+    	<td><%=number_field_tag 'Challenger3:', nil, :required => true %></td>
 	</tr>
 
 	<tr>
     	<td><%=label_tag 'Team Member 4' %></td>
-    	<td><%=number_field_tag 'Collaborator4:'%></td>
-    	<td><%=number_field_tag 'Comunicator4:'%></td>
-    	<td><%=number_field_tag 'Contributor4:'%></td>
-    	<td><%=number_field_tag 'Challenger4:'%></td>
+    	<td><%=number_field_tag 'Collaborator4:', nil, :required => true%></td>
+    	<td><%=number_field_tag 'Comunicator4:', nil, :required => true%></td>
+    	<td><%=number_field_tag 'Contributor4:', nil, :required => true%></td>
+    	<td><%=number_field_tag 'Challenger4:', nil, :required => true%></td>
 	</tr>
 
     <div><%= submit_tag 'Submit', {class: "btn btn-primary"} %></div>
@@ -103,7 +103,7 @@
         dataType: "JSON",
         success: function(json) {
 					answers = json.data
-					for (i = 0; i < answers.length; i++) { 
+					for (i = 0; i < answers.length; i++) {
     				$('.tab'+i).append("<td class =\"predict\">" + answers[i].toString()+"/5.0" + "</td>");
 					};
 					$(".prediction-result").slideDown("slow");
