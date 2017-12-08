@@ -1,11 +1,10 @@
 # C_Scores
 
-TODO: Write a project description / summary
+![Sumarry, in poster form](https://github.com/Hmc-cs-tdubno/C_Scores/blob/views/Poster.pdf "")
 
 ## Architecture
 
-Inline-style: 
-![alt text](ARCHITECTURE DIAGRAM "Logo Title Text 1")
+![Architecture Diagram](https://github.com/Hmc-cs-tdubno/C_Scores/blob/views/Capture.PNG "")
 
 This app uses a standard MVC architecture as shown above. Technologies of note include Ruby on Rails as the base, an
 SQLite database, gems such as Devise (for users) and Boostrap (for styling), the javascript library D3 to generate graphs, 
