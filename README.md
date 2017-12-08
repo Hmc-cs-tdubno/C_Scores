@@ -22,12 +22,12 @@ TODO: List which gems your project is using, and the purpose each gem serves in 
  Software and comands required to run and test project: 
  Python 3 and Pip.
  
- `git clone https://github.com/Hmc-cs-tdubno/C_Scores.git\n`
- `bundle install`
-` rake db:migrate`
-` pip install numpy`
+ `git clone https://github.com/Hmc-cs-tdubno/C_Scores.git`<br />
+ `bundle install`<br />
+` rake db:migrate`<br />
+` pip install numpy`<br />
  
- then to run run:
+ then to run run:<br />
  `rails s`
 
 ## Functionality
