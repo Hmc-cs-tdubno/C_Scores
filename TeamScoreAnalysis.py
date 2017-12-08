@@ -9,6 +9,9 @@ K_MEDIODS_ITERATIONS = 100
 #About how many teams will be in each cluster. Used to calculate the k of k-means
 APPROX_CLUSTER_SIZE = 2
 
+#Number of places to round resuts to
+RESULT_DECIMAL_NUM = 2
+
 #The filename for the CSV file (stored in the C_Scores directory) with seed data (each row a team, with
 #with 16 PTPS scores followed by some number (currently 10) outgoing survey scores)
 SEED_DATA_FILE = 'seedData.csv'
@@ -237,13 +240,14 @@ def analyze(newTeam, medScores):
 	dist = float("inf")
 	#find the closest mean
 	for medI in medScores:
-		print(medScores[medI][0])
-		print(distance(newTeam, medScores[medI][0]))
 		if distance(newTeam, medScores[medI][0]) < dist:
 			closeMed = medI
 			dist = distance(newTeam, medScores[medI][0])
 	#return the score associated with that mean
-	return medScores[closeMed][1]
+	result = medScores[closeMed][1]
+	#truncate the scores after the 100th place
+	result = (np.around(result, RESULT_DECIMAL_NUM)).tolist()
+	return result
 	
 #Below is machinery for alowing us to call the functions in this file from the app
 def main(argv):
@@ -251,8 +255,6 @@ def main(argv):
 	import ast
 	l = ast.literal_eval(''.join(argv))
 	y = analyze(l,x)
-	#truncate the scores after the 100th place
-	y = map(lambda x: floor(x*100)/100, y)
 	print(y)
 	
 
