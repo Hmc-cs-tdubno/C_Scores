@@ -1,6 +1,8 @@
 # C_Scores
 
-![Sumarry, in poster form](https://github.com/Hmc-cs-tdubno/C_Scores/blob/views/Poster.pdf "")
+![The poster created for this app](https://github.com/Hmc-cs-tdubno/C_Scores/blob/views/Poster.png "The poster created for this app")
+
+This app aims to make use of data gained from the Parker Team Player Survey, an survey on teamwork style. It acheives this in two ways. One, by allowing the user to upload datasets consisting of results from the survey and displaying these in helpful, visual ways. In addition, it uses data from teams who have completed a survey desinged by our team to measure success as well as the PTPS, and assigns measures of success to a hypothetical team inputted by the user. 
 
 ## Architecture
 
@@ -19,16 +21,9 @@ TODO: List what a user needs to have installed before running the installation i
 TODO: List which gems your project is using, and the purpose each gem serves in your app.
 
 ## Installation
- Software and comands required to run and test project: 
- Python 3 and Pip.
- 
- `git clone https://github.com/Hmc-cs-tdubno/C_Scores.git`<br />
- `bundle install`<br />
-` rake db:migrate`<br />
-` pip install numpy`<br />
- 
- then to run run:<br />
- `rails s`
+
+TODO: Describe the installation process.
+Instructions need to be such that a user can just copy/paste the commands to get things set up and running. 
 
 ## Functionality
 
