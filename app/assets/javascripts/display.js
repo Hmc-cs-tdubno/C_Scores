@@ -2,7 +2,7 @@ var margin = {top: 20, right: 70, bottom: 70, left: 40},
     width = 625 - margin.left - margin.right,
     height = 450 - margin.top - margin.bottom,
     padding = 25;
-
+$('.insights').show();
 
  function drawBarGraph () {
 
@@ -419,7 +419,6 @@ function showscatter(){
   $(".scatterlegend").show(800);
 }
 function showstart(){
-  $('.insights').show();
   $("#scattergraph").hide();
   $("#stats").hide();
   $(".scatterlegend").hide();

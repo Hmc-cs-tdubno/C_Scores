@@ -6,7 +6,8 @@ class UploadsController < ApplicationController
   def index
     @people = current_user.people
   end
-
+  def about
+  end 
   def new
   end
 
