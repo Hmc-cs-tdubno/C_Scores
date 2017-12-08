@@ -19,9 +19,16 @@ TODO: List what a user needs to have installed before running the installation i
 TODO: List which gems your project is using, and the purpose each gem serves in your app.
 
 ## Installation
-
-TODO: Describe the installation process.
-Instructions need to be such that a user can just copy/paste the commands to get things set up and running. 
+ Software and comands required to run and test project: 
+ Python 3 and Pip.
+ 
+ `git clone https://github.com/Hmc-cs-tdubno/C_Scores.git`
+ `bundle install`
+` rake db:migrate`
+` pip install numpy`
+ 
+ then to run run:
+ `rails s`
 
 ## Functionality
 
