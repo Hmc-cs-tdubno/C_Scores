@@ -1,3 +1,4 @@
+<!-- Let the user know if they've sucessfully logged in -->
 <% if flash[:notice] == nil%>
   <%elsif flash[:notice].class == String%>
   <div class="alert alert-success">
@@ -5,14 +6,13 @@
   </div>
   <%else%>
   <div class="alert alert-danger">
-    <%=puts "hello"%>
-    <%=puts flash[:notice]%>
     <strong>Danger!</strong> <%=flash[:notice]["message"].html_safe%>.
   </div>
   <% end %>
 <div>
 
-<h4>Import that data!</h4>
+<!-- Data Upload Form -->
+<h4 class="mt-3">Import that data!</h4>
   <%=form_tag import_uploads_path, multipart: true do %>
     <div class="form-group">
       <%= file_field_tag(:file, class: 'form-control')%>
@@ -22,16 +22,24 @@
       <%= text_field_tag(:dataset_id,  "", class: 'form-control') %>
       <small id="name-error" style="display: none"></small>
     </div>
-    <%= submit_tag "Import CSV/JSON",{:class => 'btn btn-primary', :id => 'poopy'} %>
+    <%= submit_tag "Import CSV/JSON",{:class => 'btn btn-primary', :id => 'submit_button'} %>
   <% end %>
 </div>
+
+<!-- Show predictions in nav and make ajax request -->
 <script type="text/javascript">
 	$(document).ready(function() {
-		$(".predictions").show();
+		$('.predictions').show();
+    $('.predictbar').show();
 
-    $('#poopy').click(function(e) {
+
+    $('#submit_button').click(function(e) {
+      // Stop the default rails form submission
       e.preventDefault();
+
       input = { dataset_id: $('#dataset_id').val() }
+
+      // Make ajax call to see if dataset name is already taken
       $.get('<%= check_dataset_id_path %>', input,
         function (data) {
 
@@ -43,30 +51,11 @@
           } else {
             $('form').submit();
           }
-
+          
           $('#name-error').replaceWith(output);
         });
     });
 
-    // // Run this function whenever someone changes the name field of the form
-    // $("#dataset_id").keyup(function () {
-    //   // Grab the name that is currently in the form input
-    //   data = { dataset_id: $('#dataset_id').val() }
-    //
-    //   // Make ajax request and respond appropriately by changing text under input tag
-    //   $.get('<%= check_dataset_id_path %>', data,
-    //     function (data) {
-    //       console.log(data);
-    //       var output = "";
-    //       if (data.message == 'Duplicate name') {
-    //         output ='<small id="name-error" style="color: red;">You already have a data set with that name </small>';
-    //       } else if (data.message == 'No parameters passed') {
-    //         output = '<small id="name-error" style="color: red;">Your dataset must have name </small>';
-    //       } else {
-    //         output = '<small id="name-error" style="display: none"></small>';
-    //       }
-    //       $('#name-error').replaceWith(output);
-    //   });
-    //})
+
 	});
 </script>

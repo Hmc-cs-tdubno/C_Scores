@@ -1,0 +1,68 @@
+<h4 class="mt-2">About</h4>
+<script type="text/javascript">
+$('.predictions').show();
+$('.predictbar').show();
+</script>
+
+<div id = "overview">
+  <p> This website is meant to allow users to vizualizes data about
+  the team player styles of a group of people and view predictions
+  about the success of a potential team based on its members' team
+  player styles.
+  </p>
+</div>
+
+<div id = "ptps">
+  <h5>The Parker Team Player Survey</h5>
+  <p>The Parker Team Player Survey asks 18 questions about how one functions
+  in a team, and assigns scores in 4 areas, called ‘team player styles’:
+  Challenger, Contributor, Communicator, and Collaborator. This survey
+  serves as the basis for the site.</p>
+</div>
+
+<div id = "team success metric">
+  <h5>Team Success Metrics</h5>
+  <p>Our metrics for team success were developed from a brod literature
+  review that studied the success of both student and software development
+  teams. We predominantly adapted survey questions from
+  <a href="http://teammetrics.apphb.com/">this
+  team success survey made for Agile teams</a> and researched indicators of team
+  sucess from <a href="https://www.ijee.ie/articles/Vol22-3/23_ijee1772.pdf">
+  this research paper</a>.
+  </p>
+</div>
+
+<div id = "clustering">
+  <h5>Clustering Algorithm</h5>
+  <p>The prediction functionality uses seed data gathered from past courses, a combination
+  of Parker Team Player Survey scores and success scores. The algorithm used is the 'k-medoids'
+  algorithm, a variation of the more popular 'k-means' algorithm. It clusters seed data by caluclating
+  silarity between teams in such a way that the order of team members is irrelevant, and only the 
+  scores of each member is used. New hypothetical teams are classified into one cluster, and assigned
+  the average score among members of that cluster for each indicator of team success. 
+  </p>
+</div>
+
+<div id = "instructions">
+  <h4>Instructions</h4>
+  <p>To use the Insights functionality of our website, first upload a .csv
+    file where each record holds the parker team player survey answers and
+    results of one person. This website is meant to integrate with the Parker
+    Team Player Survey Digization website, which is accessible on
+    <a href="https://github.com/famendola1/Worksheet-Digitalization">github</a><p>
+
+
+    If you wish to create a csv on your own to upload and view insights,
+    the first row in the csv should be this exact line: </p>
+  <div id = "csv example">
+    <p>challenger, collaborator, contributor, communicator, q1, q2, q3, q4, q5
+    q6, q7, q8, q9, q10, q11, q12, q13, q14, q15, q16, q17, q18</p>
+  </div>
+  <p> The types, the first four columns, should indicate the parker team player
+    score for that category, an integer between 18 and 72. Each question is
+    represented in a column, labeled q1-q18, and the rakings each person gave
+    are stored in a 4-character string. Each character in the string is the
+    value that person gave for that team player type on that question. The
+    styles scores should be ordered challenger, collaborator, contributor and
+    communicator for each of these 4-character strings. <p>
+</div>

@@ -1,30 +1,45 @@
 import numpy as np
 import sys
+import csv
 """This file is not well tested at this time, good chance it has bugs"""
 
 #Max number of iterations in the K-medoids algorithm
 K_MEDIODS_ITERATIONS = 100
 
 #About how many teams will be in each cluster. Used to calculate the k of k-means
-APPROX_CLUSTER_SIZE = 4
+APPROX_CLUSTER_SIZE = 2
+
+#Number of places to round resuts to
+RESULT_DECIMAL_NUM = 2
+
+#The filename for the CSV file (stored in the C_Scores directory) with seed data (each row a team, with
+#with 16 PTPS scores followed by some number (currently 10) outgoing survey scores)
+SEED_DATA_FILE = 'seedData.csv'
+
+
+def readSeed(seedFile = SEED_DATA_FILE):
+	with open(seedFile, 'r') as file:
+		seed = []
+		seedReader = csv.reader(file, delimiter=',', quotechar='|')
+		for row in seedReader:
+			row = list(map(lambda x: float(x), row))
+			PTPSScores = [row[:4], row[4:8], row[8:12], row[12:16]]
+			successScores = row[16:]
+			team = [PTPSScores, successScores]
+			seed.append(team)
+	return seed
 
 
 #List of previous data tuples with team scores array and outgoing score
-TEAMS_DATA = [([[1,1,1,1],[2,2,2,2],[3,3,3,3],[4,4,4,4]], 8),([[4,4,4,4],[3,3,3,3],[2,2,2,2],[1,1,1,1]], 8),([[-1,-1,-1,-1],[-2,-2,-2,-2],[-3,-3,-3,-3],[-4,-4,-4,-4]], 3),([[-4,-4,-4,-4],[-3,-3,-3,-3],[-2,-2,-2,-2],[-1,-1,-1,-1]], 3)]
+TEAMS_DATA = readSeed(SEED_DATA_FILE)
 
-def flatten(L):
-	newL = []
-	for i in range(len(L)):
-		if type(L[i]) == list:
-			newL.extend(flatten(L[i]))
-		else: newL.append(L[i])
-	return newL
+
 
 def euclideanDistance(v1, v2):
 	'''calculates the classic euclidean distance between two vectors'''
 	dist = 0
 	for i in range(len(v1)):
-		if type(v1[i]) == int:
+		if type(v1[i]) in [float,int]:
 			dist += (v1[i] - v2[i])**2
 		else:
 			dist += (euclideanDistance(v1[i],v2[i]))**2
@@ -156,6 +171,10 @@ Description: This function should be run once (at server start?). It uses past d
 			(currently hardcoded into this file) in the form of a list of team, score
 			tuples to calculate means and assign them scores. This is with the help of
 			the kMedoids function above to generate medoids.
+NOTE:		The scores given in seed data and assigned to clusters are a collection of scores
+			recieved on the 10 question of the Team Success Survey currently in use. However, 
+			this can be easily changed by making changes to the number of scores given in seed
+			data, along with appropriate changes to the prediction veiws.
 Output:      A dictionary whose keys are the 'medoids' of kMedoids (as tuples of lists, so 
 			that they are hashable) and whose values are the outgoing score 
 			(float) associated with that medoid. This should be stored somehow in 
@@ -183,17 +202,18 @@ def preAnalyze(seed = TEAMS_DATA):
 		#initialize teamsinmeans dictionary entries to 0
 		teamsInMeds[medI] = 0
 		#populatet ScoreDict with entries to fill in the score of each mean
-		medScores[medI] = 0
+		medScores[medI] = [0 for x in range(len(seed[0][1]))]
 
 		for team_indx in Clusters[medI]:
 			#Add 1 to the number of teams in the cluster of the current team
 			teamsInMeds[medI] += 1
-			#Add the score is the score of the current team
-			score = seed[team_indx][1]
-			#add this score to the score for the current team's mean
-			medScores[medI] += score
+			#add scores to the cluster's aggregate
+			for i in range(len(seed[team_indx][1])):
+				medScores[medI][i]+=(seed[team_indx][1][i])
 		#get the AVERAGE score for teams in a cluster, and add the med vector ot the value
-		medScores[medI] = (vectors[medI], medScores[medI]/teamsInMeds[medI])
+		medScores[medI] = list(map(lambda x:x/teamsInMeds[medI], medScores[medI]))
+		#Add the med vector to the information stored in the list
+		medScores[medI] = (vectors[medI], medScores[medI])
 	return medScores
 
 
@@ -201,9 +221,10 @@ def preAnalyze(seed = TEAMS_DATA):
 Description: This function should be called when the user asks for a new prediction.
 			It classifies a hypothetical team based on stored past data, and returns the 
 			outgoing score associated with that classification.
-Output:     An float value describing the predicted success of input team.
+Output:     An list of float values describing the predicted success of input team, one value for each qeustion
+			on the current iteration of the team success survey.
 
-Paraeters:
+Parameters:
 	newTeam - a 16-vector (currently expected as a list of 4 lists length 4, each
 				representing the scores of a particualr team member) selected by the user
 	medScores - a python dictionary computed earlier (possibly server start?) whose keys 
@@ -223,8 +244,12 @@ def analyze(newTeam, medScores):
 			closeMed = medI
 			dist = distance(newTeam, medScores[medI][0])
 	#return the score associated with that mean
-	return medScores[medI][1]
+	result = medScores[closeMed][1]
+	#truncate the scores after the 100th place
+	result = (np.around(result, RESULT_DECIMAL_NUM)).tolist()
+	return result
 	
+#Below is machinery for alowing us to call the functions in this file from the app
 def main(argv):
 	x = preAnalyze();
 	import ast

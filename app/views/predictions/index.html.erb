@@ -1,9 +1,44 @@
-<h4>Predictions</h4>
-
-<!--This form is where users enter the scores of their hypothetical team. 
+<h4 class="mt-2">Predictions</h4>
+<div class="prediction-result mt-2 container">
+  <table class="table table-condensed table-bordered">
+    <tbody>
+			<tr class = "tab0">
+				<td>Work distributed fairly and effectively:</td>
+			</tr>
+      <tr class = "tab1">
+        <td>Learning effectively from team:</td>
+      </tr>
+      <tr class = "tab2">
+        <td>Significant contributions from team to product:</td>
+      </tr>
+      <tr class = "tab3">
+        <td>Team has same goals for project:</td>
+      </tr>
+			<tr class = "tab4">
+				<td>Positive attitude:</td>
+			</tr>
+      <tr class = "tab5">
+        <td>Lack of interpersonal conflict:</td>
+      </tr>
+      <tr class = "tab6">
+        <td>Effective management of problems that arise:</td>
+      </tr>
+      <tr class = "tab7">
+        <td>Feelings of pride toward the product:</td>
+      </tr>
+			<tr class = "tab8">
+        <td>Respectful and effective teammate communication:</td>
+      </tr>
+      <tr class = "tab9">
+        <td>Effective management by PMs:</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!--This form is where users enter the scores of their hypothetical team.
 	It sends this input to the predictions controller-->
 <%= form_tag "/predictions/analyze", :id => 'predict-form' do %>
-    
+
 	<table class = "table table-responisve">
     <tr>
     	<th></th>
@@ -15,51 +50,51 @@
 
     <tr>
     	<td><%=label_tag 'Team Member 1' %></td>
-    	<td><%=number_field_tag 'Collaborator1:'%></td>
-    	<td><%=number_field_tag 'Comunicator1:'%></td>
-    	<td><%=number_field_tag 'Contributor1:'%></td>
-    	<td><%=number_field_tag 'Challenger1:'%></td>
+    	<td><%=number_field_tag 'Collaborator1:', nil, :required => true %></td>
+    	<td><%=number_field_tag 'Comunicator1:', nil, :required => true %></td>
+    	<td><%=number_field_tag 'Contributor1:', nil, :required => true %></td>
+    	<td><%=number_field_tag 'Challenger1:', nil, :required => true %></td>
 	</tr>
 
 	<tr>
     	<td><%=label_tag 'Team Member 2' %></td>
-    	<td><%=number_field_tag 'Collaborator2:'%></td>
-    	<td><%=number_field_tag 'Comunicator2:'%></td>
-    	<td><%=number_field_tag 'Contributor2:'%></td>
-    	<td><%=number_field_tag 'Challenger2:'%></td>
+    	<td><%=number_field_tag 'Collaborator2:', nil, :required => true %></td>
+    	<td><%=number_field_tag 'Comunicator2:', nil, :required => true %></td>
+    	<td><%=number_field_tag 'Contributor2:', nil, :required => true %></td>
+    	<td><%=number_field_tag 'Challenger2:', nil, :required => true %></td>
 	</tr>
 
 	<tr>
     	<td><%=label_tag 'Team Member 3' %></td>
-    	<td><%=number_field_tag 'Collaborator3:'%></td>
-    	<td><%=number_field_tag 'Comunicator3:'%></td>
-    	<td><%=number_field_tag 'Contributor3:'%></td>
-    	<td><%=number_field_tag 'Challenger3:'%></td>
+    	<td><%=number_field_tag 'Collaborator3:', nil, :required => true %></td>
+    	<td><%=number_field_tag 'Comunicator3:', nil, :required => true %></td>
+    	<td><%=number_field_tag 'Contributor3:', nil, :required => true %></td>
+    	<td><%=number_field_tag 'Challenger3:', nil, :required => true %></td>
 	</tr>
 
 	<tr>
     	<td><%=label_tag 'Team Member 4' %></td>
-    	<td><%=number_field_tag 'Collaborator4:'%></td>
-    	<td><%=number_field_tag 'Comunicator4:'%></td>
-    	<td><%=number_field_tag 'Contributor4:'%></td>
-    	<td><%=number_field_tag 'Challenger4:'%></td>
+    	<td><%=number_field_tag 'Collaborator4:', nil, :required => true%></td>
+    	<td><%=number_field_tag 'Comunicator4:', nil, :required => true%></td>
+    	<td><%=number_field_tag 'Contributor4:', nil, :required => true%></td>
+    	<td><%=number_field_tag 'Challenger4:', nil, :required => true%></td>
 	</tr>
 
-    <div><%= submit_tag 'Submit' %></div>
+    <div><%= submit_tag 'Submit', {class: "btn btn-primary"} %></div>
 <% end -%>
 
-<div class="poopy">
-</div>
+
 
 
 <!--Turns on the navbar link back to insights on in this page-->
 <script type="text/javascript">
 	$(document).ready(function() {
 		$(".predictions").show();
+		$(".prediction-result").hide();
 	});
-  
+
   $('form').submit(function () {
-      console.log("I love pineapple butts")
+      $('.predict').remove();
       var valuesToSubmit = $(this).serialize();
       $.ajax({
         type: "POST",
@@ -67,9 +102,13 @@
         data: valuesToSubmit,
         dataType: "JSON",
         success: function(json) {
-        $('.poopy').append("<p>" + json.data + "</p>");
-      }
-      })
+					answers = json.data
+					for (i = 0; i < answers.length; i++) {
+    				$('.tab'+i).append("<td class =\"predict\">" + answers[i].toString()+"/5.0" + "</td>");
+					};
+					$(".prediction-result").slideDown("slow");
+			}
+		});
       return false;
   })
 </script>
