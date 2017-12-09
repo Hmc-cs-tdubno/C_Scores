@@ -33,7 +33,13 @@ $('.predictions').show();
 
 <div id = "clustering">
   <h5>Clustering Algorithm</h5>
-  <p> </p>
+  <p>The prediction functionality uses seed data gathered from past courses, a combination
+  of Parker Team Player Survey scores and success scores. The algorithm used is the 'k-medoids'
+  algorithm, a variation of the more popular 'k-means' algorithm. It clusters seed data by caluclating
+  silarity between teams in such a way that the order of team members is irrelevant, and only the 
+  scores of each member is used. New hypothetical teams are classified into one cluster, and assigned
+  the average score among members of that cluster for each indicator of team success. 
+  </p>
 </div>
 
 <div id = "instructions">
@@ -41,7 +47,7 @@ $('.predictions').show();
   <p>To use the Insights functionality of our website, first upload a .csv
     file where each record holds the parker team player survey answers and
     results of one person. This website is meant to integrate with the Parker
-    Team PLayer Survey Digization website, which is accessible on
+    Team Player Survey Digization website, which is accessible on
     <a href="https://github.com/famendola1/Worksheet-Digitalization">github</a><p>
 
 
