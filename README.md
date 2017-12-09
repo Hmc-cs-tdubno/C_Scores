@@ -140,8 +140,17 @@ In the remaining columns, put a string such as ’1234’ or ’1342’
 representing the order of selections made on that question.
 
 ## Known Problems
-
-
+* Nav bar links and other html components flash on page load
+    - **Potential Solution:** Edit css and javascript on pages so elements do not flash
+* D3 code is cluttured and a lot of code to generate graphs is repeated
+    - **Potential Solution:** Try to condense code by creating helper functions that create scales and axes for graphs, reading data request parameters from html elements, etc. We've tried doing this, but for some reason JavaScript behaved very strangely caused other code to break.
+* Seed data for prediction
+    1. There are no column labels for the seed data, making it hard to understand and recreate.
+    2 We have to recluster every time we do a prediction along with classifying a team, this is quite inefficient.
+    - **Potential Solutions:** 1. Create a specification for formatting the seed data csv. 2. Save the cluster data after our first system call so we can reuse it for each classification.
+* Code smell in graph update code 
+    - Currently when we request data to update graphs we just add parameters to our request url manually by grabbing their values from html elements instead of using a proper html form or even a rails form:
+    - **Potential Solution** Find a way to use a rails form to select which datasets will be used to update the graphs.
 
 ## Contributing
 
