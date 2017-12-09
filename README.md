@@ -141,7 +141,7 @@ representing the order of selections made on that question.
 
 ## Known Problems
 
-TODO: Describe any known issues, bugs, odd behaviors or code smells. Provide steps to reproduce the problem / name a file or a function where the problem lives.
+
 
 ## Contributing
 
