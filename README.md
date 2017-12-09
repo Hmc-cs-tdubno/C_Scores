@@ -13,8 +13,8 @@ SQLite database, gems such as Devise (for users) and Boostrap (for styling), the
 and calls to a python script for prediction.
 
 ### Prerequisites
-
-TODO: List what a user needs to have installed before running the installation instructions below (e.g., git, which versions of Ruby/Rails)
+Ruby on Rails version 4
+Python 3 and Pip.<br />
 
 ### Gems
 
@@ -39,8 +39,7 @@ Here is the list of non-default gems we use:
  
 
 ## Installation
-Software and comands required to run and test project: 
-   Python 3 and Pip.
+comands required to run and test project:
 `git clone https://github.com/Hmc-cs-tdubno/C_Scores.git`<br />
  `bundle install`<br />
   `rake db:migrate`<br />
