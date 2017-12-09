@@ -18,7 +18,25 @@ TODO: List what a user needs to have installed before running the installation i
 
 ### Gems
 
-TODO: List which gems your project is using, and the purpose each gem serves in your app.
+Here is the list of non-default gems we use:
+* **Boostrap Gems:** These gems allow us to use bootstrap css classes and javscript code in our views, css files, and javascript files.
+  - bootstrap:  version = 4.0.0.alpha6
+  - sprockets-rails: dependencies 'sprockets/railtie'
+  - popper_js
+* **Jquery Gem:** This gem installs the jquery javascript library into our app's asset pipeline allowing us to use jquery in our views and javascript files and is required for installing bootstrap.
+  - jquery-rails
+* **D3 Gem:** This gem installs the D3 javascript library into our app's asset pipeline allowing us to use D3 in our views and javascript files.
+  - d3_rails
+* **Devise Gem:** This gem installs the Devise Rails library, which handles user sign up, loggining in, and remembering passwords.
+  - devise
+* **Testing Gems:**
+  - rspec-rails: used for unit testing
+  - rails-controller-testing: a library for rspec to unit test controllers
+  - database_cleaner: used for cleaning up our test DB after each run ou our testing suite
+  - factory_bot_rails: used for creating User model objects before testing, populating our database with those objects, and loggining a particular user in before each test in the test suite
+  - selenium-webdriver: used for end-to-end testing (i.e. feature testing)
+  - capybara: used for filling in and submitting forms during unit tests
+ 
 
 ## Installation
 Software and comands required to run and test project: 
