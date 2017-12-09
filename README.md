@@ -1,12 +1,12 @@
 # C_Scores
 
-![The poster created for this app](https://github.com/Hmc-cs-tdubno/C_Scores/blob/views/README%20images/Poster.png "The poster created for this app")
+![The poster created for this app](/README_images/Poster.png "The poster created for this app")
 
 This app aims to make use of data gained from the Parker Team Player Survey, an survey on teamwork style. It acheives this in two ways. One, by allowing the user to upload datasets consisting of results from the survey and displaying these in helpful, visual ways. In addition, it uses data from teams who have completed a survey desinged by our team to measure success as well as the PTPS, and assigns measures of success to a hypothetical team inputted by the user. 
 
 ## Architecture
 
-![Architecture Diagram](https://github.com/Hmc-cs-tdubno/C_Scores/blob/views/README%20images/Architecture.PNG "")
+![Architecture Diagram](/README_images/Architecture.PNG "")
 
 This app uses a standard MVC architecture as shown above. Technologies of note include Ruby on Rails as the base, an
 SQLite database, gems such as Devise (for users) and Boostrap (for styling), the javascript library D3 to generate graphs, 
@@ -57,14 +57,14 @@ user must first be signed up for the service. The login page is as
 described by figure 1. To create an account follow the procedure visible
 from figure 2.
 
-![ScreenShot 1](https://github.com/Hmc-cs-tdubno/C_Scores/blob/views/README%20images/Functionality1.png "")
+![ScreenShot 1](/README_images/Functionality1.png "")
 
 Once the user has an account, they can access their previously uploaded
 data by logging in on the login page. After entering a previously used
 email address and password, pressing the login button redirects the user
 to the uploads page.
 
-![ScreenShot 2](https://github.com/Hmc-cs-tdubno/C_Scores/blob/views/README%20images/Functionality2.png "")
+![ScreenShot 2](/README_images/Functionality2.png "")
 
 If desired, the user can check remember me box when logging in, after
 which they no longer need to log in again on their device until they
@@ -80,7 +80,7 @@ uploaded data and doesn’t want to upload more at this time they may
 click the ’Insights’ button on the navigation bar to access
 visualizations the data (functionality described below).
 
-![ScreenShot 3](https://github.com/Hmc-cs-tdubno/C_Scores/blob/views/README%20images/Functionality3.png "")
+![ScreenShot 3](/README_images/Functionality3.png "")
 
 ### Visualize Data:
 
@@ -96,7 +96,7 @@ user to a different insight. The links are for ’Bar Graph’, ’Scatter
 Plot’, and ’Stats’. Clicking the ’Bar Graph’ link will result in the bar
 graph image in figure 4.
 
-![ScreenShot 4](https://github.com/Hmc-cs-tdubno/C_Scores/blob/views/README%20images/Functionality4.png "")
+![ScreenShot 4](/README_images/Functionality4.png "")
 For any of the data visualizations you can select the dataset in the
 check boxes seen in the figures below and visualize those datasets that
 were selected. Clicking on the scatter graph link will redirect the user
@@ -109,14 +109,14 @@ the user’s dataset, X-axis score vs Y-Axis score plotted as points.
 Changing the legend values and pressing go again generates a new scatter
 graph with the selected values.
 
-![ScreenShot 5](https://github.com/Hmc-cs-tdubno/C_Scores/blob/views/README%20images/Functionality5.png "")
+![ScreenShot 5](/README_images/Functionality5.png "")
 
 Click on the statistics link in the insights tab redirects the user to
 the a page listing interesting statistics about the data. These
 statistics can be used to gain a deeper level of insight about the
 uploaded data.
 
-![ScreenShot 6](https://github.com/Hmc-cs-tdubno/C_Scores/blob/views/README%20images/Functionality6.png "")
+![ScreenShot 6](/README_images/Functionality6.png "")
 
 ### Prediction:
 
@@ -128,7 +128,7 @@ the data the user can press the ’Submit’ button, and a list of metrics
 to determine the success of the potential team is displayed to the user
 as seen in the figure 7
 
-![ScreenShot 7](https://github.com/Hmc-cs-tdubno/C_Scores/blob/views/README%20images/Functionality7.png "")
+![ScreenShot 7](/README_images/Functionality7.png "")
 
 ### CSV formatting:
 
