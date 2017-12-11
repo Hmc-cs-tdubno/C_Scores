@@ -44,7 +44,6 @@ class Person < ApplicationRecord
 						
 					else
 						curhash = row.to_hash
-
 						#Calculating the team player style of a person
 						styles = {
 	            		:challenger => curhash["challenger"].to_i,
@@ -55,12 +54,20 @@ class Person < ApplicationRecord
 	        			curhash["style"] = styles.max_by{|k,v| v}[0]
 					end 
 						#setting extra equal to empty hash for testing purposes
-						curhash["extra"] = {}
+						req = ["challenger","collaborator","contributor","communicator","q1","q2","q3","q4","q5","q6","q7","q8","q9","q10","q11","q12","q13","q14","q15","q16","q17","q18","style"]
+						goodhash= {}
+						req.each do |key|
+							raise Exception, "Didn't include #{key}" unless curhash[key]
+							goodhash[key] = curhash[key]
+						end
+						goodhahs["extra"] = {}
 						message	= "CSV uploaded"
-						curhash["user_id"] = current_user_id
-						curhash[:dataset_id] = dataset_id
+						goodhash["user_id"] = current_user_id
+						goodhash[:dataset_id] = dataset_id
 						#puts "style: "+curhash["style"]
-						Person.create! curhash
+						
+						
+						Person.create! goodhash
 				end
 
 			elsif(json_types.include? file.content_type)
@@ -92,6 +99,10 @@ class Person < ApplicationRecord
 			bla = e.to_s.gsub!( ' \'', ' (')
 			bla2 = bla.gsub!('\' ', ') ')
 			response = {:status => 2, :message => bla2}
+			return response
+		rescue Exception => e
+			bla = e.to_s
+			response = {:status => 2, :message => bla}
 			return response
 		end
 
