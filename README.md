@@ -126,7 +126,7 @@ prediction of the success of a potential team. The user enters the four
 style scores of four team members in their row of a form. After entering
 the data the user can press the ’Submit’ button, and a list of metrics
 to determine the success of the potential team is displayed to the user
-as seen in the figure 7
+as seen in the figure 7 as of now this functionality is only functional with teams of size four. 
 
 ![ScreenShot 7](/README_images/Functionality7.png "")
 
