@@ -15,6 +15,7 @@ and calls to a python script for prediction.
 ### Prerequisites
 Ruby on Rails version 4
 Python 3 and Pip.<br />
+these can be gotten with https://www.anaconda.com/download/
 
 ### Gems
 
