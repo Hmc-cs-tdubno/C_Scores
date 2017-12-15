@@ -13,9 +13,8 @@ SQLite database, gems such as Devise (for users) and Boostrap (for styling), the
 and calls to a python script for prediction.
 
 ### Prerequisites
-Ruby on Rails version 4
-Python 3 and Pip.<br />
-these can be gotten with https://www.anaconda.com/download/
+Ruby on Rails version 4<br />
+Python 3 and Pip which can be downloaded at https://www.anaconda.com/download/
 
 ### Gems
 
